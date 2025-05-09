@@ -59,7 +59,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: royalgridhub.jar
+          name: quizhub.jar
           path: backend/target
 
       - name: Login to DockerHub
