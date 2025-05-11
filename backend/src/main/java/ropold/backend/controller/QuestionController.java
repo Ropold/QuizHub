@@ -3,11 +3,13 @@ package ropold.backend.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ropold.backend.model.QuestionModel;
+import ropold.backend.model.QuestionModelDto;
 import ropold.backend.service.CloudinaryService;
 import ropold.backend.service.QuestionService;
 
@@ -47,6 +49,29 @@ public class QuestionController {
             @RequestPart("questionModelDto") @Valid QuestionModelDto questionModelDto,
             @RequestPart(value = "image", required = false) MultipartFile image,
             @AuthenticationPrincipal OAuth2User authentication) throws IOException {
-    )
+
+        String authenticatedUserId = authentication.getName();
+        if (!authenticatedUserId.equals(questionModelDto.githubId())) {
+            throw new AccessDeniedException("You do not have permission to add this Question.");
+        }
+
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = cloudinaryService.uploadImage(image);
+        }
+
+        return questionService.addQuestion(
+                new QuestionModel(
+                        null,
+                        questionModelDto.title(),
+                        questionModelDto.difficulty(),
+                        questionModelDto.questionText(),
+                        questionModelDto.options(),
+                        questionModelDto.answerExplanation(),
+                        questionModelDto.isActive(),
+                        questionModelDto.githubId(),
+                        imageUrl
+                )
+        );
 
 }
