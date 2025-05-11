@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import ropold.backend.exception.AccessDeniedException;
 import ropold.backend.model.QuestionModel;
 import ropold.backend.service.AppUserService;
 import ropold.backend.service.QuestionService;
@@ -58,5 +59,18 @@ public class UserController {
         String authenticatedUserId = authentication.getName();
         appUserService.removeQuestionFromFavoriteQuestions(authenticatedUserId, questionId);
     }
+
+    @PutMapping("/{id}/toggle-active")
+    public QuestionModel toggleQuestionActive(@PathVariable String id, @AuthenticationPrincipal OAuth2User authentication) {
+        String authenticatedUserId = authentication.getName();
+
+        QuestionModel questionModel = questionService.getQuestionById(id);
+        if (!questionModel.githubId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("You do not have permission to toggle this animal.");
+        }
+        return questionService.toggleAnimalActive(id);
+
+    }
+
 
 }

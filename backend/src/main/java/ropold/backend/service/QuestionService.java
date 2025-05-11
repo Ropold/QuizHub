@@ -2,6 +2,7 @@ package ropold.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ropold.backend.exception.QuestionNotFoundException;
 import ropold.backend.model.QuestionModel;
 import ropold.backend.repository.QuestionRepository;
 
@@ -16,13 +17,21 @@ public class QuestionService {
     private final CloudinaryService cloudinaryService;
 
 
-    public List<QuestionModel> getAllQuestions() {
-    }
+    public List<QuestionModel> getAllQuestions() {return questionRepository.findAll();}
 
     public List<QuestionModel> getActiveQuestions() {
+        return questionRepository.findAll().stream()
+                .filter(QuestionModel::isActive)
+                .toList();
     }
 
     public QuestionModel getQuestionById(String id) {
+        return questionRepository.findById(id)
+                .orElseThrow(() -> new QuestionNotFoundException("Question not found"));
+    }
+
+    public List<QuestionModel> getQuestionsByIds(List<String> favoriteQuestionIds) {
+        return questionRepository.findAllById(favoriteQuestionIds);
     }
 
     public QuestionModel addQuestion(QuestionModel questionModel) {
@@ -34,9 +43,10 @@ public class QuestionService {
     public void deleteQuestion(String id) {
     }
 
-    public List<QuestionModel> getQuestionsByIds(List<String> favoritePieceImageIds) {
-    }
 
     public List<QuestionModel> getQuestionsForGithubUser(String githubId) {
+    }
+
+    public QuestionModel toggleAnimalActive(String id) {
     }
 }
