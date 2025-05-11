@@ -73,5 +73,53 @@ public class QuestionController {
                         imageUrl
                 )
         );
+    }
+
+    @PutMapping("/{id}")
+    public QuestionModel updateQuestion(
+            @PathVariable String id,
+            @RequestPart("questionModelDto") @Valid QuestionModelDto questionModelDto,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @AuthenticationPrincipal OAuth2User authentication) throws IOException {
+
+        String authenticatedUserId = authentication.getName();
+        QuestionModel existingQuestion = questionService.getQuestionById(id);
+
+        if (!authenticatedUserId.equals(existingQuestion.githubId())) {
+            throw new AccessDeniedException("You do not have permission to update this piece image.");
+        }
+
+        String newImageUrl;
+        if (image != null && !image.isEmpty()) {
+            newImageUrl = cloudinaryService.uploadImage(image);
+        } else {
+            newImageUrl = existingQuestion.imageUrl();
+        }
+
+        return questionService.updateQuestion(
+                new QuestionModel(
+                        id,
+                        questionModelDto.title(),
+                        questionModelDto.difficulty(),
+                        questionModelDto.questionText(),
+                        questionModelDto.options(),
+                        questionModelDto.answerExplanation(),
+                        questionModelDto.isActive(),
+                        questionModelDto.githubId(),
+                        newImageUrl
+                ));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteQuestion(@PathVariable String id, @AuthenticationPrincipal OAuth2User authentication) {
+        String authenticatedUserId = authentication.getName();
+
+        QuestionModel questionModel = questionService.getQuestionById(id);
+        if (!questionModel.githubId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("You do not have permission to delete this Question.");
+        }
+        questionService.deleteQuestion(id);
+    }
 
 }
