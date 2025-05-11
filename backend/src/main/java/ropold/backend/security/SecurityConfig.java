@@ -20,7 +20,6 @@ import ropold.backend.model.AppUser;
 import ropold.backend.repository.AppUserRepository;
 
 import java.util.Collections;
-import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
