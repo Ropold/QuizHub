@@ -1,14 +1,16 @@
 package ropold.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ropold.backend.model.QuestionModel;
 import ropold.backend.service.AppUserService;
+import ropold.backend.service.QuestionService;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -16,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/users")
 public class UserController {
 
+    private final QuestionService questionService;
     private final AppUserService appUserService;
 
     @GetMapping(value = "/me", produces = "text/plain")
@@ -30,4 +33,30 @@ public class UserController {
         }
         return user.getAttributes();
     }
+
+    @GetMapping("/favorites")
+    public List<QuestionModel> getUserFavorites(@AuthenticationPrincipal OAuth2User authentication) {
+        List<String> favoritePieceImageIds = appUserService.getUserFavoriteQuestions(authentication.getName());
+        return questionService.getQuestionsByIds(favoritePieceImageIds);
+    }
+
+    @GetMapping("/me/my-questions/{githubId}")
+    public List<QuestionModel> getQuestionsForGithubUser(@PathVariable String githubId) {
+        return questionService.getQuestionsForGithubUser(githubId);
+    }
+
+    @PostMapping("/favorites/{questionId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addQuestionToFavorites(@PathVariable String questionId, @AuthenticationPrincipal OAuth2User authentication) {
+        String authenticatedUserId = authentication.getName();
+        appUserService.addQuestionToFavoriteQuestions(authenticatedUserId, questionId);
+    }
+
+    @DeleteMapping("/favorites/{questionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeQuestionFromFavorites(@PathVariable String questionId, @AuthenticationPrincipal OAuth2User authentication) {
+        String authenticatedUserId = authentication.getName();
+        appUserService.removeQuestionFromFavoriteQuestions(authenticatedUserId, questionId);
+    }
+
 }
