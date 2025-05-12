@@ -52,9 +52,6 @@ public class QuestionController {
             @AuthenticationPrincipal OAuth2User authentication) throws IOException {
 
         String authenticatedUserId = authentication.getName();
-        if (!authenticatedUserId.equals(questionModelDto.githubId())) {
-            throw new AccessDeniedException("You do not have permission to add this Question.");
-        }
 
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
@@ -70,7 +67,7 @@ public class QuestionController {
                         questionModelDto.options(),
                         questionModelDto.answerExplanation(),
                         questionModelDto.isActive(),
-                        questionModelDto.githubId(),
+                        authenticatedUserId,
                         imageUrl
                 )
         );
