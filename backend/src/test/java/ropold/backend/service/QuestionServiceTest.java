@@ -160,6 +160,22 @@ class QuestionServiceTest {
     }
 
     @Test
+    void testGetQuestionsForGithubUser() {
+        String githubId = "user";
+        List<QuestionModel> expectedQuestions = questionModels.stream()
+                .filter(questionModel -> questionModel.githubId().equals(githubId))
+                .toList();
+
+        when(questionRepository.findAll()).thenReturn(questionModels);
+
+        List<QuestionModel> result = questionService.getQuestionsForGithubUser(githubId);
+
+        assertEquals(expectedQuestions, result);
+        verify(questionRepository, times(1)).findAll();
+    }
+
+
+    @Test
     void testToggleQuestionActive() {
         QuestionModel questionModel = questionModels.getFirst();
         when(questionRepository.findById("1")).thenReturn(Optional.of(questionModel));
