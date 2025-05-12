@@ -187,4 +187,53 @@ class QuestionControllerIntegrationTest {
                 ));
     }
 
+    @Test
+    void updateWithPut_shouldReturnUpdatedQuestion() throws Exception {
+        OAuth2User mockOAuth2User = mock(OAuth2User.class);
+        when(mockOAuth2User.getName()).thenReturn("user");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockOAuth2User, null,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
+        );
+
+        Uploader mockUploader = mock(Uploader.class);
+        when(mockUploader.upload(any(), anyMap())).thenReturn(Map.of("secure_url", "https://example.com/updated-image.jpg"));
+        when(cloudinary.uploader()).thenReturn(mockUploader);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/quiz-hub/1")
+                        .file(new MockMultipartFile("image", "image.jpg", "image/jpeg", "image".getBytes()))
+                        .file(new MockMultipartFile("questionModelDto", "", "application/json", """
+                        {
+                            "title": "Aktualisierte Hauptstadtfrage",
+                            "difficulty": "MEDIUM",
+                            "questionText": "Was ist die Hauptstadt von Italien?",
+                            "options": [
+                                {"text": "Paris", "isCorrect": false},
+                                {"text": "Rom", "isCorrect": true},
+                                {"text": "Madrid", "isCorrect": false},
+                                {"text": "Berlin", "isCorrect": false}
+                            ],
+                            "answerExplanation": "Rom ist die Hauptstadt von Italien.",
+                            "isActive": true,
+                            "githubId": "user",
+                            "imageUrl": "https://example.com/updated-image.jpg"
+                        }
+                    """.getBytes()))
+                        .contentType("multipart/form-data")
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Aktualisierte Hauptstadtfrage"))
+                .andExpect(jsonPath("$.questionText").value("Was ist die Hauptstadt von Italien?"))
+                .andExpect(jsonPath("$.answerExplanation").value("Rom ist die Hauptstadt von Italien."))
+                .andExpect(jsonPath("$.imageUrl").value("https://example.com/updated-image.jpg"));
+
+        QuestionModel updated = questionRepository.findById("1").orElseThrow();
+        Assertions.assertEquals("Aktualisierte Hauptstadtfrage", updated.title());
+    }
+
+
 }
