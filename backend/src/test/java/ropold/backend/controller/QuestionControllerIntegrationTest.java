@@ -1,13 +1,21 @@
 package ropold.backend.controller;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Uploader;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ropold.backend.model.AnswerOption;
 import ropold.backend.model.AppUser;
 import ropold.backend.model.DifficultyEnum;
@@ -15,8 +23,14 @@ import ropold.backend.model.QuestionModel;
 import ropold.backend.repository.AppUserRepository;
 import ropold.backend.repository.QuestionRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,5 +125,66 @@ class QuestionControllerIntegrationTest {
                 .andExpect(jsonPath("$.title").value("Testfrage Mathe"));
     }
 
+    @Test
+    void postQuestion_shouldReturnCreatedQuestion() throws Exception {
+        OAuth2User mockOAuth2User = mock(OAuth2User.class);
+        when(mockOAuth2User.getName()).thenReturn("user");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockOAuth2User, null,
+                        Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
+        );
+        questionRepository.deleteAll();
+
+        Uploader mockUploader = mock(Uploader.class);
+        when(mockUploader.upload(any(), anyMap())).thenReturn(Map.of("secure_url", "https://www.test.de/"));
+        when(cloudinary.uploader()).thenReturn(mockUploader);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/quiz-hub")
+                        .file(new MockMultipartFile("image", "image.jpg", "image/jpeg", "image".getBytes()))
+                        .file(new MockMultipartFile("questionModelDto", "", "application/json", """
+                    {
+                        "title": "Hauptstadt Europas",
+                        "difficulty": "MEDIUM",
+                        "questionText": "Welche Stadt ist die Hauptstadt von Frankreich?",
+                        "options": [
+                            {"text": "Berlin", "isCorrect": false},
+                            {"text": "Madrid", "isCorrect": false},
+                            {"text": "Paris", "isCorrect": true},
+                            {"text": "Rom", "isCorrect": false}
+                        ],
+                        "answerExplanation": "Paris ist die Hauptstadt von Frankreich.",
+                        "isActive": true,
+                        "githubId": "user",
+                        "imageUrl": "https://example.com/france.jpg"
+                    }
+                    """.getBytes())))
+                .andExpect(status().isCreated());
+
+        // Validate question was saved
+        List<QuestionModel> allQuestions = questionRepository.findAll();
+        Assertions.assertEquals(1, allQuestions.size());
+
+        QuestionModel savedQuestion = allQuestions.getFirst();
+        org.assertj.core.api.Assertions.assertThat(savedQuestion)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "imageUrl")
+                .isEqualTo(new QuestionModel(
+                        null,
+                        "Hauptstadt Europas",
+                        DifficultyEnum.MEDIUM,
+                        "Welche Stadt ist die Hauptstadt von Frankreich?",
+                        List.of(
+                                new AnswerOption("Berlin", false),
+                                new AnswerOption("Madrid", false),
+                                new AnswerOption("Paris", true),
+                                new AnswerOption("Rom", false)
+                        ),
+                        "Paris ist die Hauptstadt von Frankreich.",
+                        true,
+                        "user",
+                        null
+                ));
+    }
 
 }
