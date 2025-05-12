@@ -77,7 +77,7 @@ public class QuestionService {
         questionRepository.deleteById(id);
     }
 
-
+    //nicht getestet im questionServiceTest
     public List<QuestionModel> getQuestionsForGithubUser(String githubId) {
         return questionRepository.findAll().stream()
                 .filter(questionModel -> questionModel.githubId().equals(githubId))
