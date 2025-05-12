@@ -235,5 +235,24 @@ class QuestionControllerIntegrationTest {
         Assertions.assertEquals("Aktualisierte Hauptstadtfrage", updated.title());
     }
 
+    @Test
+    void deleteQuestion_shouldReturnNoContent() throws Exception {
+        OAuth2User mockOAuth2User = mock(OAuth2User.class);
+        when(mockOAuth2User.getName()).thenReturn("user");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockOAuth2User, null,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
+        );
+
+        Uploader mockUploader = mock(Uploader.class);
+        when(mockUploader.upload(any(), anyMap())).thenReturn(Map.of("secure_url", "https://example.com/updated-image.jpg"));
+        when(cloudinary.uploader()).thenReturn(mockUploader);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/quiz-hub/1"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertFalse(questionRepository.existsById("1"));
+    }
 
 }
