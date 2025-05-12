@@ -2,6 +2,7 @@ package ropold.backend.controller;
 
 import com.cloudinary.Cloudinary;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,10 @@ import ropold.backend.repository.AppUserRepository;
 import ropold.backend.repository.QuestionRepository;
 
 import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -82,6 +87,28 @@ class QuestionControllerIntegrationTest {
                 List.of("2")
         );
         appUserRepository.save(user);
+    }
+
+    @Test
+    void getAllQuestions_shouldReturnAllQuestions() throws Exception {
+        mockMvc.perform(get("/api/quiz-hub"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Testfrage Mathe"))
+                .andExpect(jsonPath("$[1].title").value("Testfrage Geschichte"));
+    }
+
+    @Test
+    void getActiveQuestions_shouldReturnActiveQuestions() throws Exception {
+        mockMvc.perform(get("/api/quiz-hub/active"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Testfrage Mathe"));
+    }
+
+    @Test
+    void getQuestionById_shouldReturnQuestion() throws Exception {
+        mockMvc.perform(get("/api/quiz-hub/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Testfrage Mathe"));
     }
 
 
