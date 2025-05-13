@@ -35,6 +35,10 @@ public class QuestionController {
         return questionService.getActiveQuestions();
     }
 
+    @GetMapping("/active/kangaroo")
+    public List<QuestionModel> getActiveKangarooQuestions() {return questionService.getActiveKangarooQuestions();
+    }
+
     @GetMapping("/{id}")
     public QuestionModel getQuestionById(@PathVariable String id) {
         QuestionModel questionModel = questionService.getQuestionById(id);
@@ -62,7 +66,8 @@ public class QuestionController {
                 new QuestionModel(
                         null,
                         questionModelDto.title(),
-                        questionModelDto.difficulty(),
+                        questionModelDto.difficultyEnum(),
+                        questionModelDto.categoryEnum(),
                         questionModelDto.questionText(),
                         questionModelDto.options(),
                         questionModelDto.answerExplanation(),
@@ -71,6 +76,24 @@ public class QuestionController {
                         imageUrl
                 )
         );
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/no-image")
+    public QuestionModel addQuestionWithNoImage(@RequestBody QuestionModelDto questionModelDto){
+        return questionService.addQuestion(
+                new QuestionModel(
+                        null,
+                        questionModelDto.title(),
+                        questionModelDto.difficultyEnum(),
+                        questionModelDto.categoryEnum(),
+                        questionModelDto.questionText(),
+                        questionModelDto.options(),
+                        questionModelDto.answerExplanation(),
+                        questionModelDto.isActive(),
+                        questionModelDto.githubId(),
+                        null
+                ));
     }
 
     @PutMapping("/{id}")
@@ -98,7 +121,8 @@ public class QuestionController {
                 new QuestionModel(
                         id,
                         questionModelDto.title(),
-                        questionModelDto.difficulty(),
+                        questionModelDto.difficultyEnum(),
+                        questionModelDto.categoryEnum(),
                         questionModelDto.questionText(),
                         questionModelDto.options(),
                         questionModelDto.answerExplanation(),

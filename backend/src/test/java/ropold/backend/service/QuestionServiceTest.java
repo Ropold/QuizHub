@@ -3,6 +3,7 @@ package ropold.backend.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ropold.backend.model.AnswerOption;
+import ropold.backend.model.CategoryEnum;
 import ropold.backend.model.DifficultyEnum;
 import ropold.backend.model.QuestionModel;
 import ropold.backend.repository.QuestionRepository;
@@ -29,6 +30,7 @@ class QuestionServiceTest {
                 "1",
                 "What is the capital of France?",
                 DifficultyEnum.MEDIUM,
+                CategoryEnum.GEOGRAPHY,
                 "What is the capital of France?",
                 List.of(
                         new AnswerOption("Paris", true),
@@ -46,6 +48,7 @@ class QuestionServiceTest {
                 "2",
                 "What is the capital of Germany?",
                 DifficultyEnum.MEDIUM,
+                CategoryEnum.KANGAROO,
                 "What is the capital of Germany?",
                 List.of(
                         new AnswerOption("Paris", false),
@@ -78,6 +81,15 @@ class QuestionServiceTest {
     }
 
     @Test
+    void testGetActiveKangarooQuestions() {
+        List<QuestionModel> result = questionService.getActiveKangarooQuestions();
+        List<QuestionModel> expected = questionModels.stream()
+                .filter(q -> q.categoryEnum() == CategoryEnum.KANGAROO && q.isActive())
+                .toList();
+        assertEquals(expected, result);
+    }
+
+    @Test
     void testGetQuestionById() {
         QuestionModel expected = questionModels.getFirst();
         when(questionRepository.findById("1")).thenReturn(java.util.Optional.of(expected));
@@ -99,6 +111,7 @@ class QuestionServiceTest {
                 "3",
                 "What is the capital of Italy?",
                 DifficultyEnum.MEDIUM,
+                CategoryEnum.GEOGRAPHY,
                 "What is the capital of Italy?",
                 List.of(
                         new AnswerOption("Rome", true),
@@ -129,6 +142,7 @@ class QuestionServiceTest {
                 "1",
                 "What is the capital of France?",
                 DifficultyEnum.MEDIUM,
+                CategoryEnum.GEOGRAPHY,
                 "What is the capital of France?",
                 List.of(
                         new AnswerOption("Paris", true),
@@ -183,7 +197,8 @@ class QuestionServiceTest {
         QuestionModel updatedQuestionModel = new QuestionModel(
                 questionModel.id(),
                 questionModel.title(),
-                questionModel.difficulty(),
+                questionModel.difficultyEnum(),
+                questionModel.categoryEnum(),
                 questionModel.questionText(),
                 questionModel.options(),
                 questionModel.answerExplanation(),

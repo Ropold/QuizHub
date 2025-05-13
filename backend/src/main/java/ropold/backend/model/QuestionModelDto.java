@@ -14,7 +14,10 @@ public record QuestionModelDto(
         String title,
 
         @NotNull(message = "Difficulty is required")
-        DifficultyEnum difficulty,
+        DifficultyEnum difficultyEnum,
+
+        @NotNull(message = "Category is required")
+        CategoryEnum categoryEnum,
 
         @Size(min = 5, message = "Question Text must be at least 5 characters long")
         String questionText,

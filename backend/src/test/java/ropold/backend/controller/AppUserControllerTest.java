@@ -14,10 +14,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ropold.backend.model.AnswerOption;
-import ropold.backend.model.AppUser;
-import ropold.backend.model.DifficultyEnum;
-import ropold.backend.model.QuestionModel;
+import ropold.backend.model.*;
 import ropold.backend.repository.AppUserRepository;
 import ropold.backend.repository.QuestionRepository;
 
@@ -63,6 +60,7 @@ class AppUserControllerTest {
                 "1",
                 "Testfrage Mathe",
                 DifficultyEnum.EASY,
+                CategoryEnum.MATHEMATICS,
                 "Was ist 2 + 2?",
                 List.of(
                         new AnswerOption("3", false),
@@ -80,6 +78,7 @@ class AppUserControllerTest {
                 "2",
                 "Testfrage Geschichte",
                 DifficultyEnum.HARD,
+                CategoryEnum.HISTORY,
                 "In welchem Jahr fiel die Berliner Mauer?",
                 List.of(
                         new AnswerOption("1985", false),
@@ -170,7 +169,7 @@ class AppUserControllerTest {
                 {
                     "id": "1",
                     "title": "Testfrage Mathe",
-                    "difficulty": "EASY",
+                    "difficultyEnum": "EASY",
                     "questionText": "Was ist 2 + 2?",
                     "options": [
                         {"text": "3", "isCorrect": false},
@@ -186,7 +185,7 @@ class AppUserControllerTest {
                 {
                     "id": "2",
                     "title": "Testfrage Geschichte",
-                    "difficulty": "HARD",
+                    "difficultyEnum": "HARD",
                     "questionText": "In welchem Jahr fiel die Berliner Mauer?",
                     "options": [
                         {"text": "1985", "isCorrect": false},
@@ -216,7 +215,7 @@ class AppUserControllerTest {
                 {
                     "id": "2",
                     "title": "Testfrage Geschichte",
-                    "difficulty": "HARD",
+                    "difficultyEnum": "HARD",
                     "questionText": "In welchem Jahr fiel die Berliner Mauer?",
                     "options": [
                         {"text": "1985", "isCorrect": false},

@@ -3,6 +3,7 @@ package ropold.backend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ropold.backend.exception.QuestionNotFoundException;
+import ropold.backend.model.CategoryEnum;
 import ropold.backend.model.QuestionModel;
 import ropold.backend.repository.QuestionRepository;
 
@@ -24,6 +25,13 @@ public class QuestionService {
                 .toList();
     }
 
+    public List<QuestionModel> getActiveKangarooQuestions() {
+        return questionRepository.findAll().stream()
+                .filter(questionModel -> questionModel.categoryEnum() == CategoryEnum.KANGAROO)
+                .filter(QuestionModel::isActive)
+                .toList();
+    }
+
     public QuestionModel getQuestionById(String id) {
         return questionRepository.findById(id)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found"));
@@ -37,7 +45,8 @@ public class QuestionService {
         QuestionModel newQuestionModel = new QuestionModel(
                 idService.generateRandomId(),
                 questionModel.title(),
-                questionModel.difficulty(),
+                questionModel.difficultyEnum(),
+                questionModel.categoryEnum(),
                 questionModel.questionText(),
                 questionModel.options(),
                 questionModel.answerExplanation(),
@@ -53,7 +62,8 @@ public class QuestionService {
             QuestionModel updatedQuestionModel = new QuestionModel(
                     questionModel.id(),
                     questionModel.title(),
-                    questionModel.difficulty(),
+                    questionModel.difficultyEnum(),
+                    questionModel.categoryEnum(),
                     questionModel.questionText(),
                     questionModel.options(),
                     questionModel.answerExplanation(),
@@ -91,7 +101,8 @@ public class QuestionService {
         QuestionModel updatedQuestionModel = new QuestionModel(
                 questionModel.id(),
                 questionModel.title(),
-                questionModel.difficulty(),
+                questionModel.difficultyEnum(),
+                questionModel.categoryEnum(),
                 questionModel.questionText(),
                 questionModel.options(),
                 questionModel.answerExplanation(),
