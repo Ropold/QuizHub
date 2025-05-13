@@ -1,0 +1,63 @@
+/* Stil für das Begrüßungsbild */
+.logo-welcome {
+    width: 80%; /* Bildbreite auf 80% der Elternelementbreite setzen */
+    max-width: 600px; /* Maximalbreite auf 600px begrenzen */
+    margin-top: 25px;
+    padding: 5px;
+    border: 5px solid #66b3ff; /* Schwarze, 5px dicke Border */
+    border-radius: 10px; /* Abgerundete Ecken */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Beide Effekte haben die gleiche Dauer und beginnen gleichzeitig */
+}
+
+.logo-welcome:hover {
+    border-color: #388e3c; /* Farbe der Border bei Hover-Effekt ändern */
+    transform: scale(1.03); /* Skaliert das Bild leicht beim Hover */
+    box-shadow: 1px 4px 20px rgba(0, 0, 0, 0.8); /* Leichter Schatten bei Hover */
+    cursor: pointer;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.info-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.info-icon:hover {
+    background-color: #66b3ff;
+}
+
+.image-credit {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+    z-index: 10;
+    max-width: 300px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Zeige den Credit beim Hover auf das Info-Icon */
+.image-wrapper:hover .image-credit {
+    display: block;
+}
