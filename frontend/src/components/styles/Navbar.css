@@ -1,0 +1,19 @@
+.navbar {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+}
+
+.footer {
+    margin-top: auto;
+    margin-bottom: 20px;
+    padding: 1rem;
+    text-align: center;
+}
