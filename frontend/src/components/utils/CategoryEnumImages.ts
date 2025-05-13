@@ -9,10 +9,12 @@ import musicPic from "../../assets/categoryEnumImages/music.jpg";
 import politicsPic from "../../assets/categoryEnumImages/politics.jpg";
 import sciencePic from "../../assets/categoryEnumImages/science.jpg";
 import sportsPic from "../../assets/categoryEnumImages/sports.jpg";
+import kangarooPic from "../../assets/categoryEnumImages/kangaroo.jpg";
 
 import type {CategoryEnum} from "../model/CategoryEnum.ts";
 
 export const categoryEnumImages: Record<CategoryEnum, string> = {
+    KANGAROO: kangarooPic,
     ART: artPic,
     GENERAL_KNOWLEDGE: generalKnowledgePic,
     GEOGRAPHY: geographyPic,

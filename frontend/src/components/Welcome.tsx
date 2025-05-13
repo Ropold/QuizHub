@@ -29,7 +29,7 @@ export default function Welcome(){
                 {showCredits && (
                     <div className="image-credit">
                         Picture: <a href="https://www.vecteezy.com/vector-art/9016535-question-and-answers-template-quiz-game-in-tv" target="_blank" rel="noopener noreferrer">
-                        Sudoku Word Logo</a> von <a href="https://www.vecteezy.com" target="_blank" rel="noopener noreferrer">Vecteezy</a>
+                        Quiz Logo</a> von <a href="https://www.vecteezy.com" target="_blank" rel="noopener noreferrer">Vecteezy</a>
                     </div>
                 )}
             </div>

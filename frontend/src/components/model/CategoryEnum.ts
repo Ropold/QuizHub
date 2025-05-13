@@ -1,5 +1,6 @@
 
 export type CategoryEnum =
+    "KANGAROO" |
     "ART" |
     "GENERAL_KNOWLEDGE" |
     "GEOGRAPHY" |
@@ -17,6 +18,7 @@ export const ALL_CATEGORIES: CategoryEnum[] = ["ART", "GENERAL_KNOWLEDGE", "GEOG
 
 export function getCategoryEnumDisplayName(categoryEnum: CategoryEnum): string {
     const categoryEnumDisplayNames: Record<CategoryEnum, string> = {
+        KANGAROO: "Kangaroo",
         ART: "Art",
         GENERAL_KNOWLEDGE: "General Knowledge",
         GEOGRAPHY: "Geography",
