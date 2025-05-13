@@ -6,6 +6,7 @@ public record QuestionModel(
         String id,
         String title,
         DifficultyEnum difficultyEnum,
+        CategoryEnum categoryEnum,
         String questionText,
         List<AnswerOption> options,
         String answerExplanation,

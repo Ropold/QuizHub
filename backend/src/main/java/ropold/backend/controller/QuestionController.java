@@ -62,7 +62,8 @@ public class QuestionController {
                 new QuestionModel(
                         null,
                         questionModelDto.title(),
-                        questionModelDto.difficulty(),
+                        questionModelDto.difficultyEnum(),
+                        questionModelDto.categoryEnum(),
                         questionModelDto.questionText(),
                         questionModelDto.options(),
                         questionModelDto.answerExplanation(),
@@ -98,7 +99,8 @@ public class QuestionController {
                 new QuestionModel(
                         id,
                         questionModelDto.title(),
-                        questionModelDto.difficulty(),
+                        questionModelDto.difficultyEnum(),
+                        questionModelDto.categoryEnum(),
                         questionModelDto.questionText(),
                         questionModelDto.options(),
                         questionModelDto.answerExplanation(),
