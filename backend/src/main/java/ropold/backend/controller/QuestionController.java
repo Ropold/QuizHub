@@ -78,6 +78,24 @@ public class QuestionController {
         );
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/no-image")
+    public QuestionModel addQuestionWithNoImage(@RequestBody QuestionModelDto questionModelDto){
+        return questionService.addQuestion(
+                new QuestionModel(
+                        null,
+                        questionModelDto.title(),
+                        questionModelDto.difficultyEnum(),
+                        questionModelDto.categoryEnum(),
+                        questionModelDto.questionText(),
+                        questionModelDto.options(),
+                        questionModelDto.answerExplanation(),
+                        questionModelDto.isActive(),
+                        questionModelDto.githubId(),
+                        null
+                ));
+    }
+
     @PutMapping("/{id}")
     public QuestionModel updateQuestion(
             @PathVariable String id,
