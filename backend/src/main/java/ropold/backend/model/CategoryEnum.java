@@ -1,6 +1,7 @@
 package ropold.backend.model;
 
 public enum CategoryEnum {
+    KANGAROO,
     ART,
     GENERAL_KNOWLEDGE,
     GEOGRAPHY,

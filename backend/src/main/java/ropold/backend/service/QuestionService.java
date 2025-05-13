@@ -3,6 +3,7 @@ package ropold.backend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ropold.backend.exception.QuestionNotFoundException;
+import ropold.backend.model.CategoryEnum;
 import ropold.backend.model.QuestionModel;
 import ropold.backend.repository.QuestionRepository;
 
@@ -20,6 +21,13 @@ public class QuestionService {
 
     public List<QuestionModel> getActiveQuestions() {
         return questionRepository.findAll().stream()
+                .filter(QuestionModel::isActive)
+                .toList();
+    }
+
+    public List<QuestionModel> getActiveKangarooQuestions() {
+        return questionRepository.findAll().stream()
+                .filter(questionModel -> questionModel.categoryEnum() == CategoryEnum.KANGAROO)
                 .filter(QuestionModel::isActive)
                 .toList();
     }

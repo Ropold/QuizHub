@@ -57,7 +57,7 @@ class QuestionControllerIntegrationTest {
                 "1",
                 "Testfrage Mathe",
                 DifficultyEnum.EASY,
-                CategoryEnum.MATHEMATICS,
+                CategoryEnum.KANGAROO,
                 "Was ist 2 + 2?",
                 List.of(
                         new AnswerOption("3", false),
@@ -113,6 +113,13 @@ class QuestionControllerIntegrationTest {
     @Test
     void getActiveQuestions_shouldReturnActiveQuestions() throws Exception {
         mockMvc.perform(get("/api/quiz-hub/active"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Testfrage Mathe"));
+    }
+
+    @Test
+    void getActiveKangarooQuestions_shouldReturnActiveKangarooQuestions() throws Exception {
+        mockMvc.perform(get("/api/quiz-hub/active/kangaroo"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value("Testfrage Mathe"));
     }

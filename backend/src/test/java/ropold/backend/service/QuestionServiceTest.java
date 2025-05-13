@@ -48,7 +48,7 @@ class QuestionServiceTest {
                 "2",
                 "What is the capital of Germany?",
                 DifficultyEnum.MEDIUM,
-                CategoryEnum.GEOGRAPHY,
+                CategoryEnum.KANGAROO,
                 "What is the capital of Germany?",
                 List.of(
                         new AnswerOption("Paris", false),
@@ -78,6 +78,15 @@ class QuestionServiceTest {
     void testGetActiveQuestions() {
         List<QuestionModel> result = questionService.getActiveQuestions();
         assertEquals(questionModels, result);
+    }
+
+    @Test
+    void testGetActiveKangarooQuestions() {
+        List<QuestionModel> result = questionService.getActiveKangarooQuestions();
+        List<QuestionModel> expected = questionModels.stream()
+                .filter(q -> q.categoryEnum() == CategoryEnum.KANGAROO && q.isActive())
+                .toList();
+        assertEquals(expected, result);
     }
 
     @Test

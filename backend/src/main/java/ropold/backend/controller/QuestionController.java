@@ -35,6 +35,10 @@ public class QuestionController {
         return questionService.getActiveQuestions();
     }
 
+    @GetMapping("/active/kangaroo")
+    public List<QuestionModel> getActiveKangarooQuestions() {return questionService.getActiveKangarooQuestions();
+    }
+
     @GetMapping("/{id}")
     public QuestionModel getQuestionById(@PathVariable String id) {
         QuestionModel questionModel = questionService.getQuestionById(id);
