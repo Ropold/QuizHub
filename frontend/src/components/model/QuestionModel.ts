@@ -1,4 +1,5 @@
 import type {DifficultyEnum} from "./DifficultyEnum.ts";
+import type {CategoryEnum} from "./CategoryEnum.ts";
 
 export type AnswerOption = {
     text: string;
@@ -9,6 +10,7 @@ export type QuestionModel = {
     id: string;
     title: string;
     difficultyEnum: DifficultyEnum;
+    categoryEnum: CategoryEnum;
     questionText: string;
     options: AnswerOption[];
     answerExplanation: string;
@@ -21,6 +23,7 @@ export const DefaultQuestion: QuestionModel = {
     id: "",
     title: "Loading....",
     difficultyEnum: "EASY",
+    categoryEnum: "ART",
     questionText: "QuestionText",
     options: [
         { text: "Option 1", isCorrect: false },

@@ -10,3 +10,4 @@ export function getDifficultyEnumDisplayName(difficultyEnum: DifficultyEnum): st
     }
     return difficultyEnumDisplayNames[difficultyEnum]
 }
+
