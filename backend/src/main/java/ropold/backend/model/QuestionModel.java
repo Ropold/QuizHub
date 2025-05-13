@@ -5,7 +5,7 @@ import java.util.List;
 public record QuestionModel(
         String id,
         String title,
-        DifficultyEnum difficulty,
+        DifficultyEnum difficultyEnum,
         String questionText,
         List<AnswerOption> options,
         String answerExplanation,

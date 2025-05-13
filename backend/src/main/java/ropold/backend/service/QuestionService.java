@@ -37,7 +37,7 @@ public class QuestionService {
         QuestionModel newQuestionModel = new QuestionModel(
                 idService.generateRandomId(),
                 questionModel.title(),
-                questionModel.difficulty(),
+                questionModel.difficultyEnum(),
                 questionModel.questionText(),
                 questionModel.options(),
                 questionModel.answerExplanation(),
@@ -53,7 +53,7 @@ public class QuestionService {
             QuestionModel updatedQuestionModel = new QuestionModel(
                     questionModel.id(),
                     questionModel.title(),
-                    questionModel.difficulty(),
+                    questionModel.difficultyEnum(),
                     questionModel.questionText(),
                     questionModel.options(),
                     questionModel.answerExplanation(),
@@ -91,7 +91,7 @@ public class QuestionService {
         QuestionModel updatedQuestionModel = new QuestionModel(
                 questionModel.id(),
                 questionModel.title(),
-                questionModel.difficulty(),
+                questionModel.difficultyEnum(),
                 questionModel.questionText(),
                 questionModel.options(),
                 questionModel.answerExplanation(),

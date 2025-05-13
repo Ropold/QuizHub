@@ -170,7 +170,7 @@ class AppUserControllerTest {
                 {
                     "id": "1",
                     "title": "Testfrage Mathe",
-                    "difficulty": "EASY",
+                    "difficultyEnum": "EASY",
                     "questionText": "Was ist 2 + 2?",
                     "options": [
                         {"text": "3", "isCorrect": false},
@@ -186,7 +186,7 @@ class AppUserControllerTest {
                 {
                     "id": "2",
                     "title": "Testfrage Geschichte",
-                    "difficulty": "HARD",
+                    "difficultyEnum": "HARD",
                     "questionText": "In welchem Jahr fiel die Berliner Mauer?",
                     "options": [
                         {"text": "1985", "isCorrect": false},
@@ -216,7 +216,7 @@ class AppUserControllerTest {
                 {
                     "id": "2",
                     "title": "Testfrage Geschichte",
-                    "difficulty": "HARD",
+                    "difficultyEnum": "HARD",
                     "questionText": "In welchem Jahr fiel die Berliner Mauer?",
                     "options": [
                         {"text": "1985", "isCorrect": false},

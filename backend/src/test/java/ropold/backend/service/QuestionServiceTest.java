@@ -183,7 +183,7 @@ class QuestionServiceTest {
         QuestionModel updatedQuestionModel = new QuestionModel(
                 questionModel.id(),
                 questionModel.title(),
-                questionModel.difficulty(),
+                questionModel.difficultyEnum(),
                 questionModel.questionText(),
                 questionModel.options(),
                 questionModel.answerExplanation(),
