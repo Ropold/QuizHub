@@ -76,9 +76,16 @@ class QuestionServiceTest {
 
     @Test
     void testGetActiveQuestions() {
+        List<QuestionModel> expected = questionModels.stream()
+                .filter(QuestionModel::isActive)
+                .filter(q -> q.categoryEnum() != CategoryEnum.KANGAROO)
+                .toList();
+
         List<QuestionModel> result = questionService.getActiveQuestions();
-        assertEquals(questionModels, result);
+
+        assertEquals(expected, result);
     }
+
 
     @Test
     void testGetActiveKangarooQuestions() {

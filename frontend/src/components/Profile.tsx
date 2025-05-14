@@ -29,7 +29,7 @@ export default function Profile(props: Readonly<ProfileProps>) {
                 <button className={activeTab === "profile" ? "active-profile-button" : "button-group-button"} onClick={() => setActiveTab("profile")}>Profil of Github</button>
                 <button className={activeTab === "add-question" ? "active-profile-button" : "button-group-button"} onClick={() => setActiveTab("add-question")}>Add new Question</button>
                 <button className={activeTab === "my-questions" ? "active-profile-button" : "button-group-button"} onClick={() => { setActiveTab("my-questions"); setIsEditing(false); }}>My Questions</button>
-                <button className={activeTab === "favorites" ? "active-profile-button" : "button-group-button"} onClick={() => setActiveTab("favorites")}>Favorites of Question</button>
+                <button className={activeTab === "favorites" ? "active-profile-button" : "button-group-button"} onClick={() => setActiveTab("favorites")}>Favorites</button>
             </div>
 
             {/* Anzeige je nach aktivem Tab */}

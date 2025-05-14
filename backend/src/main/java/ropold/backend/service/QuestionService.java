@@ -22,6 +22,7 @@ public class QuestionService {
     public List<QuestionModel> getActiveQuestions() {
         return questionRepository.findAll().stream()
                 .filter(QuestionModel::isActive)
+                .filter(question -> question.categoryEnum() != CategoryEnum.KANGAROO)
                 .toList();
     }
 

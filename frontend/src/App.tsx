@@ -14,10 +14,21 @@ import Kangaroo from "./components/Kangaroo.tsx";
 import HighScore from "./components/HighScore.tsx";
 import ListOfAllQuestions from "./components/ListOfAllQuestions.tsx";
 import Details from "./components/Details.tsx";
+import type {QuestionModel} from "./components/model/QuestionModel.ts";
+import type {HighScoreModel} from "./components/model/HighScoreModel.ts";
 
 export default function App() {
     const [user, setUser] = useState<string>("anonymousUser");
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+    const [activeQuestions, setActiveQuestions] = useState<QuestionModel[]>([]);
+    const [allQuestions, setAllQuestions] = useState<QuestionModel[]>([]);
+    const [kangarooQuestions, setKangarooQuestions] = useState<QuestionModel[]>([]);
+    const [favorites, setFavorites] = useState<string[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [highScoreEasy, setHighScoreEasy] = useState<HighScoreModel[]>([]);
+    const [highScoreMedium, setHighScoreMedium] = useState<HighScoreModel[]>([]);
+    const [highScoreHard, setHighScoreHard] = useState<HighScoreModel[]>([]);
+    const [highScoreKangaroo, setHighScoreKangaroo] = useState<HighScoreModel[]>([]);
 
 
     function getUser() {
@@ -42,15 +53,131 @@ export default function App() {
             });
     }
 
+    function getAppUserFavorites(){
+        axios.get<QuestionModel[]>(`/api/users/favorites`)
+            .then((response) => {
+                const favoriteIds = response.data.map((question) => question.id);
+                setFavorites(favoriteIds);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    function toggleFavorite(questionId: string) {
+        const isFavorite = favorites.includes(questionId);
+
+        if (isFavorite) {
+            axios.delete(`/api/users/favorites/${questionId}`)
+                .then(() => {
+                    setFavorites((prevFavorites) =>
+                        prevFavorites.filter((id) => id !== questionId)
+                    );
+                })
+                .catch((error) => console.error(error));
+        } else {
+            axios.post(`/api/users/favorites/${questionId}`)
+                .then(() => {
+                    setFavorites((prevFavorites) => [...prevFavorites, questionId]);
+                })
+                .catch((error) => console.error(error));
+        }
+    }
+
     useEffect(() => {
         getUser();
+        getActiveQuestions();
+        getAllQuestions();
+        getKangarooQuestions();
     }, []);
 
     useEffect(() => {
         if(user !== "anonymousUser"){
             getUserDetails();
+            getAppUserFavorites();
         }
     }, [user]);
+
+    function handleNewQuestionSubmit(newQuestion: QuestionModel) {
+        setActiveQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    }
+
+    function getAllQuestions() {
+        axios
+            .get("/api/quiz-hub")
+            .then((response) => {
+                setAllQuestions(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching all animals: ", error);
+            });
+    }
+
+    function getActiveQuestions() {
+        axios
+            .get("/api/quiz-hub/active")
+            .then((response) => {
+                setActiveQuestions(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching active animals: ", error);
+            });
+    }
+
+    function getKangarooQuestions() {
+        axios
+            .get("/api/quiz-hub/active/kangaroo")
+            .then((response) => {
+                setKangarooQuestions(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching active animals: ", error);
+            });
+    }
+
+    function getHighScoreEasy() {
+        axios
+            .get("/api/high-score/EASY")
+            .then((response) => {
+                setHighScoreEasy(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching high score: ", error);
+            });
+    }
+
+    function getHighScoreMedium() {
+        axios
+            .get("/api/high-score/MEDIUM")
+            .then((response) => {
+                setHighScoreMedium(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching high score: ", error);
+            });
+    }
+
+    function getHighScoreHard() {
+        axios
+            .get("/api/high-score/HARD")
+            .then((response) => {
+                setHighScoreHard(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching high score: ", error);
+            });
+    }
+
+    function getHighScoreKangaroo() {
+        axios
+            .get("/api/high-score/KANGAROO")
+            .then((response) => {
+                setHighScoreKangaroo(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching high score: ", error);
+            });
+    }
 
   return (
     <>
@@ -60,9 +187,9 @@ export default function App() {
             <Route path="/" element={<Welcome/>}/>
             <Route path="/play" element={<Play />} />
             <Route path="/kangaroo" element={<Kangaroo/>} />
-            <Route path="/list-of-all-questions" element={<ListOfAllQuestions />} />
+            <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} currentPage={currentPage} setCurrentPage={setCurrentPage}/>} />
             <Route path="/list-of-all-questions/:id" element={<Details />} />
-            <Route path="/high-score" element={<HighScore />} />
+            <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />
 
             <Route element={<ProtectedRoute user={user}/>}>
                 <Route path="/profile/*" element={<Profile user={user} userDetails={userDetails}/>} />
