@@ -1,12 +1,21 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import type {NullableDifficultyEnum} from "./model/DifficultyEnum.ts";
-import type {NullableCategoryEnum} from "./model/CategoryEnum.ts";
+import {ALL_DIFFICULTIES, getDifficultyEnumDisplayName, type NullableDifficultyEnum} from "./model/DifficultyEnum.ts";
+import {
+    ALL_CATEGORIES,
+    type CategoryEnum,
+    getCategoryEnumDisplayName,
+    type NullableCategoryEnum
+} from "./model/CategoryEnum.ts";
 import axios from "axios";
 import type {QuestionData} from "./model/QuestionData.ts";
+import type {QuestionModel} from "./model/QuestionModel.ts";
+import headerLogo from "../assets/quiz-logo-header.jpg"
+import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 
 type AddQuestionCardProps = {
     user: string;
+    handleNewQuestionSubmit: (newQuestion: QuestionModel) => void;
 }
 
 export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
@@ -82,8 +91,6 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
         return data;
     }
 
-
-
     function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         if(e.target.files){
             const file = e.target.files[0];
@@ -98,10 +105,114 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
     }
 
     return (
-        <div>
-            <h2>Add Question</h2>
-            <p>Here you can add a new question.</p>
-            <p>{props.user}</p>
+        <div className="edit-form">
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Title:
+                    <input
+                        className="input-small"
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                </label>
+
+                <div className="question-category-row">
+
+                    <label className="question-difficulty-label">
+                        Difficulty:
+                        <select
+                            className="input-small select-space"
+                            value={difficultyEnum}
+                            onChange={(e) => setDifficultyEnum(e.target.value as NullableDifficultyEnum)}
+                        >
+                            <option value="">Please select difficulty</option>
+                            {ALL_DIFFICULTIES.map((difficulty) => (
+                                <option key={difficulty} value={difficulty}>
+                                    {getDifficultyEnumDisplayName(difficulty)}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <label className="question-category-label">
+                        Category:
+                        <select
+                            className="input-small select-space"
+                            value={categoryEnum}
+                            onChange={(e) => setCategoryEnum(e.target.value as NullableCategoryEnum)}
+                        >
+                            <option value="">Please select a category</option>
+                            {ALL_CATEGORIES.map((category) => (
+                                <option key={category} value={category}>
+                                    {getCategoryEnumDisplayName(category)}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <img
+                        src={
+                            categoryEnum
+                                ? categoryEnumImages[categoryEnum as CategoryEnum]
+                                : headerLogo
+                        }
+                        alt={categoryEnum || "logo quiz hub"}
+                        className="question-card-image-add"
+                    />
+
+                </div>
+
+                <label>
+                    Question Text:
+                    <textarea
+                        className="textarea-large"
+                        value={questionText}
+                        onChange={(e) => setQuestionText(e.target.value)}
+                    />
+                </label>
+
+                <label>
+                    Answer Explanation:
+                    <textarea
+                        className="textarea-large"
+                        value={questionText}
+                        onChange={(e) => setAnswerExplanation(e.target.value)}
+                    />
+                </label>
+
+                <label>
+                    Image:
+                    <input
+                        type="file"
+                        onChange={onFileChange}
+                    />
+                </label>
+
+                {image && (
+                    <img src={URL.createObjectURL(image)} className="animal-card-image" alt="Preview" />
+                )}
+
+                <div className="space-between">
+                    <button className="button-group-button" type="submit">Add Animal Card</button>
+                </div>
+            </form>
+
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-content">
+                        <h3>Validation Errors</h3>
+                        <ul>
+                            {errorMessages.map((msg, index) => (
+                                <li key={index}>{msg}</li>
+                            ))}
+                        </ul>
+                        <div className="popup-actions">
+                            <button className="popup-cancel" onClick={handleClosePopup}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }

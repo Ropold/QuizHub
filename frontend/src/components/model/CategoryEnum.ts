@@ -14,7 +14,8 @@ export type CategoryEnum =
 
 export type NullableCategoryEnum = CategoryEnum | "";
 
-export const ALL_CATEGORIES_NO_K: CategoryEnum[] = [
+export const ALL_CATEGORIES: CategoryEnum[] = [
+    "KANGAROO",
     "ART",
     "GENERAL_KNOWLEDGE",
     "GEOGRAPHY",

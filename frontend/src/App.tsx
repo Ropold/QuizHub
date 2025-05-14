@@ -101,7 +101,7 @@ export default function App() {
     }, [user]);
 
     function handleNewQuestionSubmit(newQuestion: QuestionModel) {
-        setActiveQuestionsWithNoK((prevQuestions) => [...prevQuestions, newQuestion]);
+        setAllActiveQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
     }
 
     function getAllQuestions() {
