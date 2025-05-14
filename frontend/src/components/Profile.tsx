@@ -1,7 +1,7 @@
 import type {UserDetails} from "./model/UserDetailsModel.ts";
 import {useEffect, useState} from "react";
 import Favorites from "./Favorites.tsx";
-import MyQuestion from "./MyQuestion.tsx";
+import MyQuestions from "./MyQuestions.tsx";
 import AddQuestionCard from "./AddQuestionCard.tsx";
 import "./styles/Profile.css";
 import type {QuestionModel} from "./model/QuestionModel.ts";
@@ -68,9 +68,9 @@ export default function Profile(props: Readonly<ProfileProps>) {
                         )}
                     </>
                 )}
-                {activeTab === "add-question" && <AddQuestionCard />}
-                {activeTab === "my-questions" && <MyQuestion />}
-                {activeTab === "favorites" && <Favorites />}
+                {activeTab === "add-question" && <AddQuestionCard user={props.user}/>}
+                {activeTab === "my-questions" && <MyQuestions user={props.user} favorites={props.favorites} toggleFavorite={props.toggleFavorite} isEditing={isEditing} setIsEditing={setIsEditing} allQuestions={props.allQuestions} getAllQuestions={props.getAllQuestions} setAllQuestions={props.setAllQuestions}/>}
+                {activeTab === "favorites" && <Favorites user={props.user} favorites={props.favorites} toggleFavorite={props.toggleFavorite}/>}
             </div>
         </div>
     );

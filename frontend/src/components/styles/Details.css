@@ -1,0 +1,34 @@
+.details-question-container {
+    padding: 1rem;
+}
+
+.details-question-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.details-question-options {
+    margin: 1rem 0;
+}
+
+.details-options-list {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.details-option-item {
+    margin-bottom: 0.3rem;
+}
+
+.details-option-correct {
+    color: green;
+    font-weight: bold;
+}
+
+.details-question-image {
+    max-width: 300px;
+    display: block;
+    margin-top: 1rem;
+}
+
+

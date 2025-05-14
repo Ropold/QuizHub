@@ -22,7 +22,7 @@ export default function App() {
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
     const [activeQuestionsWithNoK, setActiveQuestionsWithNoK] = useState<QuestionModel[]>([]);
     const [allQuestions, setAllQuestions] = useState<QuestionModel[]>([]);
-    const [kangarooQuestions, setKangarooQuestions] = useState<QuestionModel[]>([]);
+    const [allActiveKangarooQuestions, setAllActiveKangarooQuestions] = useState<QuestionModel[]>([]);
     const [allActiveQuestions, setAllActiveQuestions] = useState<QuestionModel[]>([]);
     const [favorites, setFavorites] = useState<string[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -90,6 +90,7 @@ export default function App() {
         getActiveQuestionsWithNoK();
         getAllQuestions();
         getKangarooQuestions();
+        getAllActiveQuestions();
     }, []);
 
     useEffect(() => {
@@ -140,7 +141,7 @@ export default function App() {
         axios
             .get("/api/quiz-hub/active/kangaroo")
             .then((response) => {
-                setKangarooQuestions(response.data);
+                setAllActiveKangarooQuestions(response.data);
             })
             .catch((error) => {
                 console.error("Error fetching active animals: ", error);
@@ -197,10 +198,10 @@ export default function App() {
         <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Welcome/>}/>
-            <Route path="/play" element={<Play />} />
-            <Route path="/kangaroo" element={<Kangaroo/>} />
+            <Route path="/play" element={<Play user={user} activeQuestionsWithNoK={activeQuestionsWithNoK}/>} />
+            <Route path="/kangaroo" element={<Kangaroo user={user} allActiveKangarooQuestions={allActiveKangarooQuestions}/>} />
             <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} currentPage={currentPage} setCurrentPage={setCurrentPage} allActiveQuestions={allActiveQuestions} getAllActiveQuestions={getAllActiveQuestions}/>} />
-            <Route path="/list-of-all-questions/:id" element={<Details />} />
+            <Route path="/list-of-all-questions/:id" element={<Details user={user} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
             <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />
 
             <Route element={<ProtectedRoute user={user}/>}>
