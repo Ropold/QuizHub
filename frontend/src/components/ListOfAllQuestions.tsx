@@ -1,8 +1,11 @@
+import type {QuestionModel} from "./model/QuestionModel.ts";
 
 type ListOfAllQuestionsProps = {
     user: string;
     currentPage: number;
     setCurrentPage: (pageNumber: number) => void;
+    allActiveQuestions: QuestionModel[];
+    getAllActiveQuestions: () => void;
 }
 
 export default function ListOfAllQuestions(props: Readonly<ListOfAllQuestionsProps>) {

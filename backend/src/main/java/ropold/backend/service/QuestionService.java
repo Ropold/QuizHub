@@ -33,6 +33,12 @@ public class QuestionService {
                 .toList();
     }
 
+    public List<QuestionModel> getAllActiveQuestions() {
+        return questionRepository.findAll().stream()
+                .filter(QuestionModel::isActive)
+                .toList();
+    }
+
     public QuestionModel getQuestionById(String id) {
         return questionRepository.findById(id)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found"));

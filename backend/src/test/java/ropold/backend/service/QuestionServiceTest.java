@@ -75,7 +75,7 @@ class QuestionServiceTest {
     }
 
     @Test
-    void testGetActiveQuestions() {
+    void testGetActiveQuestionsWithNoK() {
         List<QuestionModel> expected = questionModels.stream()
                 .filter(QuestionModel::isActive)
                 .filter(q -> q.categoryEnum() != CategoryEnum.KANGAROO)
@@ -86,12 +86,20 @@ class QuestionServiceTest {
         assertEquals(expected, result);
     }
 
-
     @Test
     void testGetActiveKangarooQuestions() {
         List<QuestionModel> result = questionService.getActiveKangarooQuestions();
         List<QuestionModel> expected = questionModels.stream()
                 .filter(q -> q.categoryEnum() == CategoryEnum.KANGAROO && q.isActive())
+                .toList();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testGetActiveAllQuestions() {
+        List<QuestionModel> result = questionService.getAllActiveQuestions();
+        List<QuestionModel> expected = questionModels.stream()
+                .filter(QuestionModel::isActive)
                 .toList();
         assertEquals(expected, result);
     }

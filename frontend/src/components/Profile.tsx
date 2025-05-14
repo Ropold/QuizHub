@@ -4,10 +4,17 @@ import Favorites from "./Favorites.tsx";
 import MyQuestion from "./MyQuestion.tsx";
 import AddQuestionCard from "./AddQuestionCard.tsx";
 import "./styles/Profile.css";
+import type {QuestionModel} from "./model/QuestionModel.ts";
 
 type ProfileProps = {
     user: string;
     userDetails: UserDetails | null;
+    handleNewQuestionSubmit: (newQuestion: QuestionModel) => void;
+    allQuestions: QuestionModel[];
+    getAllQuestions: () => void;
+    setAllQuestions: React.Dispatch<React.SetStateAction<QuestionModel[]>>;
+    favorites: string[];
+    toggleFavorite: (questionId: string) => void;
 }
 
 export default function Profile(props: Readonly<ProfileProps>) {

@@ -20,9 +20,10 @@ import type {HighScoreModel} from "./components/model/HighScoreModel.ts";
 export default function App() {
     const [user, setUser] = useState<string>("anonymousUser");
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-    const [activeQuestions, setActiveQuestions] = useState<QuestionModel[]>([]);
+    const [activeQuestionsWithNoK, setActiveQuestionsWithNoK] = useState<QuestionModel[]>([]);
     const [allQuestions, setAllQuestions] = useState<QuestionModel[]>([]);
     const [kangarooQuestions, setKangarooQuestions] = useState<QuestionModel[]>([]);
+    const [allActiveQuestions, setAllActiveQuestions] = useState<QuestionModel[]>([]);
     const [favorites, setFavorites] = useState<string[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [highScoreEasy, setHighScoreEasy] = useState<HighScoreModel[]>([]);
@@ -86,7 +87,7 @@ export default function App() {
 
     useEffect(() => {
         getUser();
-        getActiveQuestions();
+        getActiveQuestionsWithNoK();
         getAllQuestions();
         getKangarooQuestions();
     }, []);
@@ -99,7 +100,7 @@ export default function App() {
     }, [user]);
 
     function handleNewQuestionSubmit(newQuestion: QuestionModel) {
-        setActiveQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+        setActiveQuestionsWithNoK((prevQuestions) => [...prevQuestions, newQuestion]);
     }
 
     function getAllQuestions() {
@@ -113,11 +114,22 @@ export default function App() {
             });
     }
 
-    function getActiveQuestions() {
+    function getActiveQuestionsWithNoK() {
         axios
             .get("/api/quiz-hub/active")
             .then((response) => {
-                setActiveQuestions(response.data);
+                setActiveQuestionsWithNoK(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching active animals: ", error);
+            });
+    }
+
+    function getAllActiveQuestions(){
+        axios
+            .get("/api/quiz-hub/active-all")
+            .then((response) => {
+                setAllActiveQuestions(response.data);
             })
             .catch((error) => {
                 console.error("Error fetching active animals: ", error);
@@ -187,12 +199,12 @@ export default function App() {
             <Route path="/" element={<Welcome/>}/>
             <Route path="/play" element={<Play />} />
             <Route path="/kangaroo" element={<Kangaroo/>} />
-            <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} currentPage={currentPage} setCurrentPage={setCurrentPage}/>} />
+            <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} currentPage={currentPage} setCurrentPage={setCurrentPage} allActiveQuestions={allActiveQuestions} getAllActiveQuestions={getAllActiveQuestions}/>} />
             <Route path="/list-of-all-questions/:id" element={<Details />} />
             <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />
 
             <Route element={<ProtectedRoute user={user}/>}>
-                <Route path="/profile/*" element={<Profile user={user} userDetails={userDetails}/>} />
+                <Route path="/profile/*" element={<Profile user={user} userDetails={userDetails} handleNewQuestionSubmit={handleNewQuestionSubmit} allQuestions={allQuestions} getAllQuestions={getAllQuestions} setAllQuestions={setAllQuestions} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
             </Route>
 
         </Routes>

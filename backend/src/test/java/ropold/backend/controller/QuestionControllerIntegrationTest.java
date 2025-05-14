@@ -125,6 +125,14 @@ class QuestionControllerIntegrationTest {
     }
 
     @Test
+    void getAllActiveQuestions_shouldReturnAllActiveQuestions() throws Exception {
+        mockMvc.perform(get("/api/quiz-hub/active-all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("Testfrage Mathe"));
+    }
+
+    @Test
     void getQuestionById_shouldReturnQuestion() throws Exception {
         mockMvc.perform(get("/api/quiz-hub/1"))
                 .andExpect(status().isOk())
