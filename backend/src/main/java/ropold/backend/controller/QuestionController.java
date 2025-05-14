@@ -80,7 +80,12 @@ public class QuestionController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/no-image")
-    public QuestionModel addQuestionWithNoImage(@RequestBody QuestionModelDto questionModelDto){
+    public QuestionModel addQuestionWithNoImage(
+            @RequestBody QuestionModelDto questionModelDto,
+            @AuthenticationPrincipal OAuth2User authentication) {
+
+        String authenticatedUserId = authentication.getName();
+
         return questionService.addQuestion(
                 new QuestionModel(
                         null,
@@ -91,10 +96,12 @@ public class QuestionController {
                         questionModelDto.options(),
                         questionModelDto.answerExplanation(),
                         questionModelDto.isActive(),
-                        questionModelDto.githubId(),
+                        authenticatedUserId,
                         null
-                ));
+                )
+        );
     }
+
 
     @PutMapping("/{id}")
     public QuestionModel updateQuestion(
