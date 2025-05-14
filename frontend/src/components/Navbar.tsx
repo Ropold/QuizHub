@@ -62,7 +62,7 @@ export default function Navbar(props: Readonly<NavbarProps>) {
             <div
                 className="clickable-header"
                 onClick={() => {
-                    navigate("/list-of-all-animals");
+                    navigate("/list-of-all-questions");
                 }}
             >
                 <h2 className="header-title">All Questions</h2>

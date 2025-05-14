@@ -9,6 +9,11 @@ import type {UserDetails} from "./components/model/UserDetailsModel.ts";
 import axios from "axios";
 import NotFound from "./components/NotFound.tsx";
 import Footer from "./components/Footer.tsx";
+import Play from "./components/Play.tsx";
+import Kangaroo from "./components/Kangaroo.tsx";
+import HighScore from "./components/HighScore.tsx";
+import ListOfAllQuestions from "./components/ListOfAllQuestions.tsx";
+import Details from "./components/Details.tsx";
 
 export default function App() {
     const [user, setUser] = useState<string>("anonymousUser");
@@ -53,6 +58,11 @@ export default function App() {
         <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Welcome/>}/>
+            <Route path="/play" element={<Play />} />
+            <Route path="/kangaroo" element={<Kangaroo/>} />
+            <Route path="/list-of-all-questions" element={<ListOfAllQuestions />} />
+            <Route path="/list-of-all-questions/:id" element={<Details />} />
+            <Route path="/high-score" element={<HighScore />} />
 
             <Route element={<ProtectedRoute user={user}/>}>
                 <Route path="/profile/*" element={<Profile user={user} userDetails={userDetails}/>} />
