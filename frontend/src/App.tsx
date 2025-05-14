@@ -201,7 +201,7 @@ export default function App() {
             <Route path="/play" element={<Play user={user} activeQuestionsWithNoK={activeQuestionsWithNoK}/>} />
             <Route path="/kangaroo" element={<Kangaroo user={user} allActiveKangarooQuestions={allActiveKangarooQuestions}/>} />
             <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} currentPage={currentPage} setCurrentPage={setCurrentPage} allActiveQuestions={allActiveQuestions} getAllActiveQuestions={getAllActiveQuestions}/>} />
-            <Route path="/list-of-all-questions/:id" element={<Details user={user} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
+            <Route path="/question/:id" element={<Details user={user} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
             <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />
 
             <Route element={<ProtectedRoute user={user}/>}>

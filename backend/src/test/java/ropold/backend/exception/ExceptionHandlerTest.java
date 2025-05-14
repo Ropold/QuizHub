@@ -80,8 +80,7 @@ class ExceptionHandlerTest {
                 {
                   "title": "Title must be at least 3 characters long",
                   "questionText": "Question Text must be at least 5 characters long",
-                  "options": "Exactly one answer option must be marked as correct",
-                  "imageUrl": "Image URL cannot be blank"
+                  "options": "Exactly one answer option must be marked as correct"
                 }
             """));
     }
