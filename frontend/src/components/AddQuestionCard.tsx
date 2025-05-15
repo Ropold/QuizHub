@@ -12,6 +12,7 @@ import type {QuestionData} from "./model/QuestionData.ts";
 import type {QuestionModel} from "./model/QuestionModel.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
 import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
+import "./styles/AddQuestionCard.css"
 
 type AddQuestionCardProps = {
     user: string;
@@ -119,10 +120,10 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
 
                 <div className="question-category-row">
 
-                    <label className="question-difficulty-label">
+                    <label className="add-question-label">
                         Difficulty:
                         <select
-                            className="input-small select-space"
+                            className="input-small"
                             value={difficultyEnum}
                             onChange={(e) => setDifficultyEnum(e.target.value as NullableDifficultyEnum)}
                         >
@@ -135,10 +136,10 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                         </select>
                     </label>
 
-                    <label className="question-category-label">
+                    <label className="add-question-label">
                         Category:
                         <select
-                            className="input-small select-space"
+                            className="input-small"
                             value={categoryEnum}
                             onChange={(e) => setCategoryEnum(e.target.value as NullableCategoryEnum)}
                         >
@@ -189,7 +190,7 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                 </label>
 
                 {image && (
-                    <img src={URL.createObjectURL(image)} className="animal-card-image" alt="Preview" />
+                    <img src={URL.createObjectURL(image)} className="question-card-image" alt="Preview" />
                 )}
 
                 <div className="space-between">
