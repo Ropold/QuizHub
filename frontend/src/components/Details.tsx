@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import {DefaultUserDetails, type UserDetails} from "./model/UserDetailsModel.ts";
 import {useParams} from "react-router-dom";
 import axios from "axios";
+import type {CategoryEnum} from "./model/CategoryEnum.ts";
+import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 
 type DetailsProps = {
     user: string;
@@ -62,13 +64,13 @@ export default function Details(props: Readonly<DetailsProps>) {
 
                 <p><strong>Explanation:</strong> {questions.answerExplanation || "No explanation available"}</p>
 
-                {questions.imageUrl && (
+
                     <img
                         className="details-image"
-                        src={questions.imageUrl}
+                        src={questions.imageUrl ? questions.imageUrl : categoryEnumImages[questions.categoryEnum as CategoryEnum]}
                         alt={questions.title}
                     />
-                )}
+
 
                 {props.user !== "anonymousUser" && (
                     <div>

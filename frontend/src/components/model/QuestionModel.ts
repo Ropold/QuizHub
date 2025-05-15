@@ -33,6 +33,6 @@ export const DefaultQuestion: QuestionModel = {
     ],
     answerExplanation: "AnswerExplanation",
     isActive: true,
-    githubId: "123456",
+    githubId: "",
     imageUrl: "https://dummyimage.com/300x200/cccccc/000000&text=No+Image+Available",
 };
