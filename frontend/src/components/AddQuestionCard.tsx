@@ -13,6 +13,7 @@ import type {QuestionModel} from "./model/QuestionModel.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
 import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 import "./styles/AddQuestionCard.css"
+import "./styles/Popup.css"
 
 type AddQuestionCardProps = {
     user: string;
@@ -37,7 +38,7 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const questionData = {
+        const questionData: QuestionData = {
             title,
             difficultyEnum,
             categoryEnum,
@@ -46,22 +47,21 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
             answerExplanation,
             isActive: true,
             githubId: props.user,
-            imageUrl: imageUrl || null,
+            imageUrl: imageUrl
         };
 
-        // Entscheide, welche URL und Daten du basierend auf dem Vorhandensein eines Bildes verwenden möchtest
-        const endpoint = image ? "/api/quiz-hub" : "/api/quiz-hub/no-image";
-        const formData = image ? prepareFormData(questionData) : questionData;
+        const data = new FormData();
 
-        submitQuestion(endpoint, formData);
-    }
+        if (image) {
+            data.append("image", image);
+        }
 
+        data.append("questionModelDto", new Blob([JSON.stringify(questionData)], { type: "application/json" }));
 
-    function submitQuestion(endpoint: string, data: QuestionData | FormData) {
         axios
-            .post(endpoint, data, {
+            .post("/api/quiz-hub", data, {
                 headers: {
-                    "Content-Type": endpoint === "/api/quiz-hub" ? "multipart/form-data" : "application/json",
+                    "Content-Type": "multipart/form-data",
                 },
             })
             .then((response) => {
@@ -83,14 +83,6 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
             });
     }
 
-    function prepareFormData(questionData: QuestionData) {
-        const data = new FormData();
-        data.append("questionModelDto", JSON.stringify(questionData));
-        if (image) {
-            data.append("image", image);
-        }
-        return data;
-    }
 
     function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         if(e.target.files){
@@ -172,11 +164,49 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                     />
                 </label>
 
+                <label className="add-question-label">
+                    Options:
+                    {[0, 1, 2, 3].map((index) => (
+                        <div key={index} className="add-option-row">
+                            <input
+                                type="text"
+                                className="add-input-small"
+                                placeholder={`Option ${index + 1}`}
+                                value={options[index]?.text || ""}
+                                onChange={(e) => {
+                                    const updated = [...options];
+                                    updated[index] = {
+                                        ...updated[index],
+                                        text: e.target.value,
+                                        isCorrect: updated[index]?.isCorrect || false,
+                                    };
+                                    setOptions(updated);
+                                }}
+                            />
+                            <label className="add-correct-checkbox">
+                                <input
+                                    type="checkbox"
+                                    checked={options[index]?.isCorrect || false}
+                                    onChange={() => {
+                                        const updated = options.map((opt, i) => ({
+                                            text: opt?.text || "",
+                                            isCorrect: i === index, // Nur dieser Index wird korrekt
+                                        }));
+                                        setOptions(updated);
+                                    }}
+                                />
+                                Correct
+                            </label>
+                        </div>
+                    ))}
+                </label>
+
+
                 <label>
                     Answer Explanation:
                     <textarea
                         className="textarea-large"
-                        value={questionText}
+                        value={answerExplanation}
                         onChange={(e) => setAnswerExplanation(e.target.value)}
                     />
                 </label>
@@ -194,7 +224,7 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                 )}
 
                 <div className="space-between">
-                    <button className="button-group-button" type="submit">Add Animal Card</button>
+                    <button className="button-group-button" type="submit">Add Question Card</button>
                 </div>
             </form>
 

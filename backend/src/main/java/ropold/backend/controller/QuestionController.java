@@ -83,29 +83,29 @@ public class QuestionController {
         );
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/no-image")
-    public QuestionModel addQuestionWithNoImage(
-            @RequestBody QuestionModelDto questionModelDto,
-            @AuthenticationPrincipal OAuth2User authentication) {
-
-        String authenticatedUserId = authentication.getName();
-
-        return questionService.addQuestion(
-                new QuestionModel(
-                        null,
-                        questionModelDto.title(),
-                        questionModelDto.difficultyEnum(),
-                        questionModelDto.categoryEnum(),
-                        questionModelDto.questionText(),
-                        questionModelDto.options(),
-                        questionModelDto.answerExplanation(),
-                        questionModelDto.isActive(),
-                        authenticatedUserId,
-                        null
-                )
-        );
-    }
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @PostMapping("/no-image")
+//    public QuestionModel addQuestionWithNoImage(
+//            @RequestBody QuestionModelDto questionModelDto,
+//            @AuthenticationPrincipal OAuth2User authentication) {
+//
+//        String authenticatedUserId = authentication.getName();
+//
+//        return questionService.addQuestion(
+//                new QuestionModel(
+//                        null,
+//                        questionModelDto.title(),
+//                        questionModelDto.difficultyEnum(),
+//                        questionModelDto.categoryEnum(),
+//                        questionModelDto.questionText(),
+//                        questionModelDto.options(),
+//                        questionModelDto.answerExplanation(),
+//                        questionModelDto.isActive(),
+//                        authenticatedUserId,
+//                        null
+//                )
+//        );
+//    }
 
     //wird noch gelöscht
     @ResponseStatus(HttpStatus.CREATED)

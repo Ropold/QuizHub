@@ -20,7 +20,7 @@
 
 .textarea-large {
     width: 100%;
-    height: 150px;
+    height: 80px;
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -56,4 +56,30 @@
     display: flex;
     flex-direction: column;
 }
+
+.add-option-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.add-correct-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.add-input-small {
+    padding: 8px;
+    height: 40px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
 
