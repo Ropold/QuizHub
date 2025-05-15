@@ -153,3 +153,41 @@
 .margin-top-20{
     margin-top: 20px;
 }
+
+#button-favorite-question-card {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    outline: none;
+}
+.favorite-on {
+    color: red;
+}
+
+.favorite-off {
+    color: #999;
+}
+
+#active-button-my-questions{
+    background-color: #66bb6a;
+}
+#active-button-my-questions:hover{
+    background-color: #388e3c;
+}
+
+#button-is-inactive {
+    background-color: #999;
+}
+#button-is-inactive:hover {
+    background-color: #555;
+}
+#button-delete {
+    background-color: #ff9999;
+}
+
+#button-delete:hover {
+    background-color: #d32f2f;
+}

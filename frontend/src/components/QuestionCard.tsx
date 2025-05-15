@@ -44,7 +44,7 @@ export default function QuestionCard(props: Readonly<QuestionCardProps>) {
             {props.showButtons && (
                 <div className="space-between">
                     <button
-                        id={props.question.isActive ? "active-button-my-question" : "button-is-inactive"}
+                        id={props.question.isActive ? "active-button-my-questions" : "button-is-inactive"}
                         onClick={(e) => {
                             e.stopPropagation();
                             props.handleToggleActiveStatus?.(props.question.id);

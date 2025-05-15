@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import type {QuestionModel} from "./model/QuestionModel.ts";
 import axios from "axios";
 import "./styles/Details.css"
+import QuestionCard from "./QuestionCard.tsx";
 
 type FavoritesProps = {
     user: string;
@@ -24,10 +25,20 @@ export default function Favorites(props: Readonly<FavoritesProps>) {
     }, [props.user, props.favorites]);
 
     return (
-        <div>
-            <h2>Favorites</h2>
-            <p>Here you can find your favorite questions.</p>
-            <p>{props.user}</p>
+        <div className="question-card-container">
+            {favoritesQuestions.length > 0 ? (
+                favoritesQuestions.map((a) => (  // ← Korrekte Syntax mit `r`
+                    <QuestionCard
+                        key={a.id}
+                        question={a}
+                        user={props.user}
+                        favorites={props.favorites}
+                        toggleFavorite={props.toggleFavorite}
+                    />
+                ))
+            ) : (
+                <p>No Animals in favorites</p>
+            )}
         </div>
     )
 }
