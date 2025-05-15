@@ -30,11 +30,11 @@
     margin-bottom: 15px;
 }
 
-.question-card-image{
-    width: 250px; /* Bild passt sich der Breite an */
-    height: 180px; /* Feste Höhe */
-    object-fit: cover; /* Bild wird vollständig angezeigt */
-    border-bottom: 1px solid #ccc;
+.add-question-card-image {
+    height: auto;
+    width: 100px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .question-category-row {
@@ -45,12 +45,6 @@
     justify-content: center;
 }
 
-.question-card-image-add {
-    width: auto;
-    height: 100px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
 .add-question-label {
     display: flex;

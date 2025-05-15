@@ -150,7 +150,7 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                                 : headerLogo
                         }
                         alt={categoryEnum || "logo quiz hub"}
-                        className="question-card-image-add"
+                        className="add-question-card-image"
                     />
 
                 </div>
@@ -220,11 +220,11 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                 </label>
 
                 {image && (
-                    <img src={URL.createObjectURL(image)} className="question-card-image" alt="Preview" />
+                    <img src={URL.createObjectURL(image)} className="add-question-card-image" alt="Preview" />
                 )}
 
                 <div className="space-between">
-                    <button className="button-group-button" type="submit">Add Question Card</button>
+                    <button className="button-group-button margin-top-20" type="submit">Add Question Card</button>
                 </div>
             </form>
 
