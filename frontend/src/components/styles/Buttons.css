@@ -145,3 +145,11 @@
 #button-border-animation:focus {
     outline: none; /* Optional: Entfernt den Standard-Fokusrahmen!*/
 }
+
+.margin-top-50{
+    margin-top: 50px;
+}
+
+.margin-top-20{
+    margin-top: 20px;
+}

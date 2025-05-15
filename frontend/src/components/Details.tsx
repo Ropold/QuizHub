@@ -42,17 +42,17 @@ export default function Details(props: Readonly<DetailsProps>) {
 
     return (
         <>
-            <div className="details-question-container">
-                <h2 className="details-question-title">{questions.title}</h2>
+            <div className="details-container">
+                <h2>{questions.title}</h2>
                 <p><strong>Category:</strong> {questions.categoryEnum}</p>
                 <p><strong>Difficulty:</strong> {questions.difficultyEnum}</p>
                 <p><strong>Question:</strong> {questions.questionText}</p>
+                <p><strong>Options:</strong></p>
+                <div className="details-options">
 
-                <div className="details-question-options">
-                    <strong>Options:</strong>
-                    <ul className="details-options-list">
+                    <ul>
                         {questions.options.map((option, index) => (
-                            <li key={index} className="details-option-item">
+                            <li key={index}>
                                 {option.text}
                                 {option.isCorrect && <span className="details-option-correct"> (correct)</span>}
                             </li>
@@ -64,7 +64,7 @@ export default function Details(props: Readonly<DetailsProps>) {
 
                 {questions.imageUrl && (
                     <img
-                        className="details-question-image"
+                        className="details-image"
                         src={questions.imageUrl}
                         alt={questions.title}
                     />
@@ -73,7 +73,7 @@ export default function Details(props: Readonly<DetailsProps>) {
                 {props.user !== "anonymousUser" && (
                     <div>
                         <button
-                            className={`button-group-button ${isFavorite ? "favorite-on" : "favorite-off"}`}
+                            className={`button-group-button margin-top-20 ${isFavorite ? "favorite-on" : "favorite-off"}`}
                             onClick={() => props.toggleFavorite(questions.id)}
                         >
                             ♥
