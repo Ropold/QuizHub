@@ -3,6 +3,10 @@ import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import type {DifficultyEnum} from "./model/DifficultyEnum.ts";
 import type {CategoryEnum} from "./model/CategoryEnum.ts";
+import SearchBar from "./SearchBar.tsx";
+import QuestionCard from "./QuestionCard.tsx";
+import "./styles/QuestionCard.css"
+import "./styles/SearchBar.css"
 
 type ListOfAllQuestionsProps = {
     user: string;
@@ -81,12 +85,44 @@ export default function ListOfAllQuestions(props: Readonly<ListOfAllQuestionsPro
         return { currentQuestions: currentQuestions, totalPages };
     }
 
+    const { currentQuestions, totalPages } = getPaginationData();
 
     return (
-        <div>
-            <h2>List of all Questions</h2>
-            <p>{props.user}</p>
-            <p>Here you can find all questions.</p>
-        </div>
+        <>
+            <SearchBar
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedDifficultyEnum={selectedDifficultyEnum}
+                setSelectedDifficultyEnum={setSelectedDifficultyEnum}
+                selectedCategoryEnum={selectedCategoryEnum}
+                setSelectedCategoryEnum={setSelectedCategoryEnum}
+                activeQuestions={props.allActiveQuestions}
+            />
+            <div className="question-card-container">
+                {currentQuestions.map((q) => (
+                    <QuestionCard
+                        key={q.id}
+                        question={q}
+                        user={props.user}
+                        favorites={props.favorites}
+                        toggleFavorite={props.toggleFavorite}
+                    />
+                ))}
+            </div>
+            <div className="space-between">
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index}
+                        className={"button-group-button"}
+                        id={index +1 === props.currentPage ? "active-paginate" : undefined}
+                        onClick={() => {
+                            props.setCurrentPage(index + 1);
+                        }}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+            </div>
+        </>
     )
 }
