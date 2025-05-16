@@ -39,6 +39,11 @@ public class QuestionController {
     public List<QuestionModel> getActiveKangarooQuestions() {return questionService.getActiveKangarooQuestions();
     }
 
+    @GetMapping("/active-all")
+    public List<QuestionModel> getActiveAllQuestions() {
+        return questionService.getAllActiveQuestions();
+    }
+
     @GetMapping("/{id}")
     public QuestionModel getQuestionById(@PathVariable String id) {
         QuestionModel questionModel = questionService.getQuestionById(id);
@@ -79,8 +84,10 @@ public class QuestionController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/no-image")
-    public QuestionModel addQuestionWithNoImage(@RequestBody QuestionModelDto questionModelDto){
+    @PostMapping("/no-login")
+    public QuestionModel addQuestionWithNoLogin(
+            @RequestBody QuestionModelDto questionModelDto) {
+
         return questionService.addQuestion(
                 new QuestionModel(
                         null,
@@ -93,8 +100,10 @@ public class QuestionController {
                         questionModelDto.isActive(),
                         questionModelDto.githubId(),
                         null
-                ));
+                )
+        );
     }
+
 
     @PutMapping("/{id}")
     public QuestionModel updateQuestion(
@@ -107,30 +116,35 @@ public class QuestionController {
         QuestionModel existingQuestion = questionService.getQuestionById(id);
 
         if (!authenticatedUserId.equals(existingQuestion.githubId())) {
-            throw new AccessDeniedException("You do not have permission to update this piece image.");
+            throw new AccessDeniedException("You do not have permission to update this question.");
         }
 
         String newImageUrl;
+
         if (image != null && !image.isEmpty()) {
             newImageUrl = cloudinaryService.uploadImage(image);
+        } else if (questionModelDto.imageUrl() == null || questionModelDto.imageUrl().isBlank()) {
+            newImageUrl = null;
         } else {
             newImageUrl = existingQuestion.imageUrl();
         }
 
-        return questionService.updateQuestion(
-                new QuestionModel(
-                        id,
-                        questionModelDto.title(),
-                        questionModelDto.difficultyEnum(),
-                        questionModelDto.categoryEnum(),
-                        questionModelDto.questionText(),
-                        questionModelDto.options(),
-                        questionModelDto.answerExplanation(),
-                        questionModelDto.isActive(),
-                        questionModelDto.githubId(),
-                        newImageUrl
-                ));
+        QuestionModel updatedQuestion = new QuestionModel(
+                id,
+                questionModelDto.title(),
+                questionModelDto.difficultyEnum(),
+                questionModelDto.categoryEnum(),
+                questionModelDto.questionText(),
+                questionModelDto.options(),
+                questionModelDto.answerExplanation(),
+                questionModelDto.isActive(),
+                questionModelDto.githubId(),
+                newImageUrl
+        );
+
+        return questionService.updateQuestion(updatedQuestion);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

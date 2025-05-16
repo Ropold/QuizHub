@@ -30,8 +30,6 @@ public record QuestionModelDto(
         String answerExplanation,
         boolean isActive,
         String githubId,
-
-        @NotBlank(message = "Image URL cannot be blank")
         String imageUrl
 ) {
 }

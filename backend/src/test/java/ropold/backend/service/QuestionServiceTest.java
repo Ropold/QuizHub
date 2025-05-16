@@ -75,9 +75,15 @@ class QuestionServiceTest {
     }
 
     @Test
-    void testGetActiveQuestions() {
+    void testGetActiveQuestionsWithNoK() {
+        List<QuestionModel> expected = questionModels.stream()
+                .filter(QuestionModel::isActive)
+                .filter(q -> q.categoryEnum() != CategoryEnum.KANGAROO)
+                .toList();
+
         List<QuestionModel> result = questionService.getActiveQuestions();
-        assertEquals(questionModels, result);
+
+        assertEquals(expected, result);
     }
 
     @Test
@@ -85,6 +91,15 @@ class QuestionServiceTest {
         List<QuestionModel> result = questionService.getActiveKangarooQuestions();
         List<QuestionModel> expected = questionModels.stream()
                 .filter(q -> q.categoryEnum() == CategoryEnum.KANGAROO && q.isActive())
+                .toList();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testGetActiveAllQuestions() {
+        List<QuestionModel> result = questionService.getAllActiveQuestions();
+        List<QuestionModel> expected = questionModels.stream()
+                .filter(QuestionModel::isActive)
                 .toList();
         assertEquals(expected, result);
     }
@@ -137,7 +152,6 @@ class QuestionServiceTest {
 
     @Test
     void testUpdateQuestion() {
-
         QuestionModel updatedQuestionModel = new QuestionModel(
                 "1",
                 "What is the capital of France?",
@@ -156,13 +170,17 @@ class QuestionServiceTest {
                 "https://example.com/question1.jpg"
         );
 
-        when(questionRepository.existsById("1")).thenReturn(true);
+        when(questionRepository.findById("1")).thenReturn(Optional.of(updatedQuestionModel));
         when(questionRepository.save(updatedQuestionModel)).thenReturn(updatedQuestionModel);
 
         QuestionModel result = questionService.updateQuestion(updatedQuestionModel);
+
         assertEquals(updatedQuestionModel, result);
-        verify(questionRepository, times(1)).existsById("1");
+
+        // verify(questionRepository, times(1)).existsById("1");  // <-- Entfernen!
+        verify(questionRepository, times(1)).save(updatedQuestionModel);
     }
+
 
     @Test
     void testDeleteQuestion() {

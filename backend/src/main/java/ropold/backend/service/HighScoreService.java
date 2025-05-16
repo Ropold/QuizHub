@@ -26,6 +26,7 @@ public class HighScoreService {
                 highScoreModel.playerName(),
                 highScoreModel.githubId(),
                 highScoreModel.difficultyEnum(),
+                highScoreModel.categoryEnum(),
                 highScoreModel.wrongAnswerCount(),
                 highScoreModel.scoreTime(),
                 highScoreModel.date()

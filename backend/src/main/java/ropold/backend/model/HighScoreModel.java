@@ -13,6 +13,7 @@ public record HighScoreModel(
         String playerName,
         String githubId,
         DifficultyEnum difficultyEnum,
+        String categoryEnum,
         int wrongAnswerCount,
         double scoreTime,
         @NotNull LocalDateTime date

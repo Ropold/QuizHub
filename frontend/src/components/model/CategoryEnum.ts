@@ -1,5 +1,5 @@
-
 export type CategoryEnum =
+    "KANGAROO" |
     "ART" |
     "GENERAL_KNOWLEDGE" |
     "GEOGRAPHY" |
@@ -12,11 +12,26 @@ export type CategoryEnum =
     "SCIENCE" |
     "SPORTS";
 
+export type NullableCategoryEnum = CategoryEnum | "";
 
-export const ALL_CATEGORIES: CategoryEnum[] = ["ART", "GENERAL_KNOWLEDGE", "GEOGRAPHY", "HISTORY", "LITERATURE", "MATHEMATICS", "MOVIES_AND_TV", "MUSIC", "POLITICS", "SCIENCE", "SPORTS"];
+export const ALL_CATEGORIES: CategoryEnum[] = [
+    "KANGAROO",
+    "ART",
+    "GENERAL_KNOWLEDGE",
+    "GEOGRAPHY",
+    "HISTORY",
+    "LITERATURE",
+    "MATHEMATICS",
+    "MOVIES_AND_TV",
+    "MUSIC",
+    "POLITICS",
+    "SCIENCE",
+    "SPORTS"
+];
 
-export function getCategoryEnumDisplayName(categoryEnum: CategoryEnum): string {
+export function getCategoryEnumDisplayName(categoryEnum: NullableCategoryEnum): string {
     const categoryEnumDisplayNames: Record<CategoryEnum, string> = {
+        KANGAROO: "Kangaroo",
         ART: "Art",
         GENERAL_KNOWLEDGE: "General Knowledge",
         GEOGRAPHY: "Geography",
@@ -28,6 +43,8 @@ export function getCategoryEnumDisplayName(categoryEnum: CategoryEnum): string {
         POLITICS: "Politics",
         SCIENCE: "Science",
         SPORTS: "Sports"
-    }
-    return categoryEnumDisplayNames[categoryEnum]
+    };
+
+    if (categoryEnum === "") return "Please select a category";
+    return categoryEnumDisplayNames[categoryEnum];
 }

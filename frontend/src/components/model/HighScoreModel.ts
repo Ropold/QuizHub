@@ -5,6 +5,7 @@ export type HighScoreModel = {
     playerName: string;
     githubId: string;
     difficultyEnum: DifficultyEnum;
+    categoryEnum: string;
     wrongAnswerCount: number;
     scoreTime: number;
     date: string;
