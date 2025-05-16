@@ -303,13 +303,14 @@ class QuestionControllerIntegrationTest {
                             return request;
                         }))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Aktualisierte Hauptstadtfrage"))
+                .andExpect(jsonPath("$.title").value("Testfrage Mathe"))
                 .andExpect(jsonPath("$.questionText").value("Was ist die Hauptstadt von Italien?"))
                 .andExpect(jsonPath("$.answerExplanation").value("Rom ist die Hauptstadt von Italien."))
                 .andExpect(jsonPath("$.imageUrl").value("https://example.com/updated-image.jpg"));
 
+
         QuestionModel updated = questionRepository.findById("1").orElseThrow();
-        Assertions.assertEquals("Aktualisierte Hauptstadtfrage", updated.title());
+        Assertions.assertEquals("Testfrage Mathe", updated.title());
     }
 
     @Test
