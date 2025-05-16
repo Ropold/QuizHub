@@ -1,6 +1,7 @@
 import type {QuestionModel} from "./model/QuestionModel.ts";
 import {useState} from "react";
 import axios from "axios";
+import QuestionCard from "./QuestionCard.tsx";
 
 type MyQuestionsProps = {
     user: string;
@@ -128,9 +129,43 @@ export default function MyQuestions(props: Readonly<MyQuestionsProps>) {
 
     return (
         <div>
-            <h2>My Question</h2>
-            <p>Here you can find your questions.</p>
-            <p>{props.user}</p>
+            {props.isEditing ? (
+                <input type="text" />
+            ) : (
+                <div className="question-card-container">
+                    {props.allQuestions.length > 0 ? (
+                        props.allQuestions.map((q) => (
+                            <div key={q.id}>
+                                <QuestionCard
+                                    question={q}
+                                    user={props.user}
+                                    favorites={props.favorites}
+                                    toggleFavorite={props.toggleFavorite}
+                                    showButtons={true}
+                                    handleEditToggle={handleEditToggle}
+                                    handleDeleteClick={handleDeleteClick}
+                                    handleToggleActiveStatus={handleToggleActiveStatus}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <p>No Questions found for this user.</p>
+                    )}
+                </div>
+            )}
+
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-content">
+                        <h3>Confirm Deletion</h3>
+                        <p>Are you sure you want to delete this question?</p>
+                        <div className="popup-actions">
+                            <button onClick={handleConfirmDelete} className="popup-confirm">Yes, Delete</button>
+                            <button onClick={handleCancel} className="popup-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
-    )
+    );
 }
