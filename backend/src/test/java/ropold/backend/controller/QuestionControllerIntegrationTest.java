@@ -2,6 +2,7 @@ package ropold.backend.controller;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -280,9 +281,9 @@ class QuestionControllerIntegrationTest {
                         .file(new MockMultipartFile("image", "image.jpg", "image/jpeg", "image".getBytes()))
                         .file(new MockMultipartFile("questionModelDto", "", "application/json", """
                         {
-                            "title": "Aktualisierte Hauptstadtfrage",
-                            "difficultyEnum": "MEDIUM",
-                            "categoryEnum": "GEOGRAPHY",
+                            "title": "Testfrage Mathe",
+                            "difficultyEnum": "EASY",
+                            "categoryEnum": "KANGAROO",
                             "questionText": "Was ist die Hauptstadt von Italien?",
                             "options": [
                                 {"text": "Paris", "isCorrect": false},
@@ -330,5 +331,53 @@ class QuestionControllerIntegrationTest {
 
         Assertions.assertFalse(questionRepository.existsById("1"));
     }
+
+    @Test
+    void updateQuestion_withoutImage_shouldSetImageUrlNull() throws Exception {
+        OAuth2User mockOAuth2User = mock(OAuth2User.class);
+        when(mockOAuth2User.getName()).thenReturn("user");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockOAuth2User, null,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
+        );
+
+        Uploader mockUploader = mock(Uploader.class);
+        when(mockUploader.upload(any(), anyMap())).thenReturn(Map.of("secure_url", "https://example.com/updated-image.jpg"));
+        when(cloudinary.uploader()).thenReturn(mockUploader);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/quiz-hub/1")
+                        .file(new MockMultipartFile("questionModelDto", "", "application/json", """
+                        {
+                            "title": "Testfrage Mathe",
+                            "difficultyEnum": "MEDIUM",
+                            "categoryEnum": "GEOGRAPHY",
+                            "questionText": "Was ist 2 + 2?",
+                            "options": [
+                                {"text": "3", "isCorrect": false},
+                                {"text": "4", "isCorrect": true},
+                                {"text": "5", "isCorrect": false},
+                                {"text": "6", "isCorrect": false}
+                            ],
+                            "answerExplanation": "2 + 2 ergibt 4, weil es eine einfache Addition ist.",
+                            "isActive": true,
+                            "githubId": "user",
+                            "imageUrl": null
+                        }
+                    """.getBytes()))
+                        .contentType("multipart/form-data")
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imageUrl").value(Matchers.nullValue()));
+
+        QuestionModel updated = questionRepository.findById("1").orElseThrow();
+        Assertions.assertNull(updated.imageUrl());
+
+    }
+
+
 
 }
