@@ -379,6 +379,51 @@ class QuestionControllerIntegrationTest {
 
     }
 
+    @Test
+    void updateQuestion_withExistingImageUrl_shouldKeepOldImageUrl() throws Exception {
+        OAuth2User mockOAuth2User = mock(OAuth2User.class);
+        when(mockOAuth2User.getName()).thenReturn("user");
 
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockOAuth2User, null,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
+        );
+
+        Uploader mockUploader = mock(Uploader.class);
+        when(mockUploader.upload(any(), anyMap())).thenReturn(Map.of("secure_url", "https://example.com/image.jpg"));
+        when(cloudinary.uploader()).thenReturn(mockUploader);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/quiz-hub/1")
+                        // Kein 'image' File, um den else-Zweig zu triggern
+                        .file(new MockMultipartFile("questionModelDto", "", "application/json", """
+                    {
+                        "title": "Testfrage Mathe",
+                        "difficultyEnum": "MEDIUM",
+                        "categoryEnum": "GEOGRAPHY",
+                        "questionText": "Was ist geändert?",
+                        "options": [
+                            {"text": "3", "isCorrect": false},
+                            {"text": "4", "isCorrect": true},
+                            {"text": "5", "isCorrect": false},
+                            {"text": "6", "isCorrect": false}
+                        ],
+                        "answerExplanation": "2 + 2 ergibt 4, weil es eine einfache Addition ist.",
+                        "isActive": true,
+                        "githubId": "user",
+                        "imageUrl": "https://example.com/image.jpg"
+                    }
+                    """.getBytes()))
+                        .contentType("multipart/form-data")
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imageUrl").value("https://example.com/image.jpg"))
+                .andExpect(jsonPath("$.questionText").value("Was ist geändert?"));
+
+        QuestionModel updated = questionRepository.findById("1").orElseThrow();
+        Assertions.assertEquals("https://example.com/image.jpg", updated.imageUrl());
+    }
 
 }
