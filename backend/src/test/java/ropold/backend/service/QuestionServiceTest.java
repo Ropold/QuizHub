@@ -152,7 +152,6 @@ class QuestionServiceTest {
 
     @Test
     void testUpdateQuestion() {
-
         QuestionModel updatedQuestionModel = new QuestionModel(
                 "1",
                 "What is the capital of France?",
@@ -171,13 +170,17 @@ class QuestionServiceTest {
                 "https://example.com/question1.jpg"
         );
 
-        when(questionRepository.existsById("1")).thenReturn(true);
+        when(questionRepository.findById("1")).thenReturn(Optional.of(updatedQuestionModel));
         when(questionRepository.save(updatedQuestionModel)).thenReturn(updatedQuestionModel);
 
         QuestionModel result = questionService.updateQuestion(updatedQuestionModel);
+
         assertEquals(updatedQuestionModel, result);
-        verify(questionRepository, times(1)).existsById("1");
+
+        // verify(questionRepository, times(1)).existsById("1");  // <-- Entfernen!
+        verify(questionRepository, times(1)).save(updatedQuestionModel);
     }
+
 
     @Test
     void testDeleteQuestion() {

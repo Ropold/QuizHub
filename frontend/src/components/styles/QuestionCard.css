@@ -31,7 +31,8 @@
 }
 
 .question-card-image {
-    width: 280px; /* Bild passt sich der Breite an */
+    width: 260px; /* Bild passt sich der Breite an */
+    max-height: 170px;
     object-fit: cover; /* Bild wird vollständig angezeigt */
     border-bottom: 1px solid #ccc;
 }

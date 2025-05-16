@@ -1,5 +1,6 @@
 import type {QuestionModel} from "./model/QuestionModel.ts";
 import {useNavigate} from "react-router-dom";
+import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 
 
 type QuestionCardProps = {
@@ -26,7 +27,11 @@ export default function QuestionCard(props: Readonly<QuestionCardProps>) {
     return (
         <div className="question-card" onClick={handleCardClick}>
             <h3>{props.question.title}</h3>
-            <img src={props.question.imageUrl} alt={props.question.title} className="question-card-image" />
+            <img
+                src={props.question.imageUrl ? props.question.imageUrl : categoryEnumImages[props.question.categoryEnum]}
+                alt={props.question.title}
+                className="question-card-image"
+            />
 
             {props.user !== "anonymousUser" && (
                 <button

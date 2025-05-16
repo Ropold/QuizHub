@@ -65,23 +65,17 @@ public class QuestionService {
     }
 
     public QuestionModel updateQuestion(QuestionModel questionModel) {
-        if (questionRepository.existsById(questionModel.id())) {
-            QuestionModel updatedQuestionModel = new QuestionModel(
-                    questionModel.id(),
-                    questionModel.title(),
-                    questionModel.difficultyEnum(),
-                    questionModel.categoryEnum(),
-                    questionModel.questionText(),
-                    questionModel.options(),
-                    questionModel.answerExplanation(),
-                    questionModel.isActive(),
-                    questionModel.githubId(),
-                    questionModel.imageUrl()
-            );
-            return questionRepository.save(updatedQuestionModel);
-        }
-        throw new QuestionNotFoundException("No Question found with id: " + questionModel.id());
+        QuestionModel existingQuestion = getQuestionById(questionModel.id());
 
+        boolean oldHadImage = existingQuestion.imageUrl() != null && !existingQuestion.imageUrl().isBlank();
+        boolean nowNoImage = questionModel.imageUrl() == null || questionModel.imageUrl().isBlank();
+        boolean imageWasReplaced = oldHadImage && !existingQuestion.imageUrl().equals(questionModel.imageUrl());
+
+        if (oldHadImage && (nowNoImage || imageWasReplaced)) {
+            cloudinaryService.deleteImage(existingQuestion.imageUrl());
+        }
+
+        return questionRepository.save(questionModel);
     }
 
     public void deleteQuestion(String id) {

@@ -116,30 +116,35 @@ public class QuestionController {
         QuestionModel existingQuestion = questionService.getQuestionById(id);
 
         if (!authenticatedUserId.equals(existingQuestion.githubId())) {
-            throw new AccessDeniedException("You do not have permission to update this piece image.");
+            throw new AccessDeniedException("You do not have permission to update this question.");
         }
 
         String newImageUrl;
+
         if (image != null && !image.isEmpty()) {
             newImageUrl = cloudinaryService.uploadImage(image);
+        } else if (questionModelDto.imageUrl() == null || questionModelDto.imageUrl().isBlank()) {
+            newImageUrl = null;
         } else {
             newImageUrl = existingQuestion.imageUrl();
         }
 
-        return questionService.updateQuestion(
-                new QuestionModel(
-                        id,
-                        questionModelDto.title(),
-                        questionModelDto.difficultyEnum(),
-                        questionModelDto.categoryEnum(),
-                        questionModelDto.questionText(),
-                        questionModelDto.options(),
-                        questionModelDto.answerExplanation(),
-                        questionModelDto.isActive(),
-                        questionModelDto.githubId(),
-                        newImageUrl
-                ));
+        QuestionModel updatedQuestion = new QuestionModel(
+                id,
+                questionModelDto.title(),
+                questionModelDto.difficultyEnum(),
+                questionModelDto.categoryEnum(),
+                questionModelDto.questionText(),
+                questionModelDto.options(),
+                questionModelDto.answerExplanation(),
+                questionModelDto.isActive(),
+                questionModelDto.githubId(),
+                newImageUrl
+        );
+
+        return questionService.updateQuestion(updatedQuestion);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
