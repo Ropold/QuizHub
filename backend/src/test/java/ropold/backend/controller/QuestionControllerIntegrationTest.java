@@ -204,6 +204,65 @@ class QuestionControllerIntegrationTest {
     }
 
     @Test
+    void postQuestionWithNoLogin_shouldReturnCreatedQuestion() throws Exception {
+        questionRepository.deleteAll();
+
+        String json = """
+        {
+            "title": "Frage ohne Login",
+            "difficultyEnum": "EASY",
+            "categoryEnum": "ART",
+            "questionText": "Was ist Kunst?",
+            "options": [
+                {"text": "Malerei", "isCorrect": true},
+                {"text": "Rechnen", "isCorrect": false},
+                {"text": "Sport", "isCorrect": false},
+                {"text": "Musik", "isCorrect": false}
+            ],
+            "answerExplanation": "Kunst umfasst Malerei und andere kreative Ausdrucksformen.",
+            "isActive": true,
+            "githubId": "anonymous"
+        }
+        """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/quiz-hub/no-login")
+                        .contentType("application/json")
+                        .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").value("Frage ohne Login"))
+                .andExpect(jsonPath("$.difficultyEnum").value("EASY"))
+                .andExpect(jsonPath("$.categoryEnum").value("ART"))
+                .andExpect(jsonPath("$.githubId").value("anonymous"))
+                .andExpect(jsonPath("$.imageUrl").doesNotExist());
+
+        List<QuestionModel> allQuestions = questionRepository.findAll();
+        Assertions.assertEquals(1, allQuestions.size());
+
+        QuestionModel savedQuestion = allQuestions.getFirst();
+        org.assertj.core.api.Assertions.assertThat(savedQuestion)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "imageUrl")
+                .isEqualTo(new QuestionModel(
+                        null,
+                        "Frage ohne Login",
+                        DifficultyEnum.EASY,
+                        CategoryEnum.ART,
+                        "Was ist Kunst?",
+                        List.of(
+                                new AnswerOption("Malerei", true),
+                                new AnswerOption("Rechnen", false),
+                                new AnswerOption("Sport", false),
+                                new AnswerOption("Musik", false)
+                        ),
+                        "Kunst umfasst Malerei und andere kreative Ausdrucksformen.",
+                        true,
+                        "anonymous",
+                        null
+                ));
+    }
+
+
+    @Test
     void updateWithPut_shouldReturnUpdatedQuestion() throws Exception {
         OAuth2User mockOAuth2User = mock(OAuth2User.class);
         when(mockOAuth2User.getName()).thenReturn("user");
