@@ -2,6 +2,8 @@ import type {QuestionModel} from "./model/QuestionModel.ts";
 import {useState} from "react";
 import type {HighScoreModel} from "./model/HighScoreModel.ts";
 import kangarooLogo from "../assets/categoryEnumImages/kangaroo.jpg";
+import Preview from "./Preview.tsx";
+import "./styles/Play.css"
 
 type ListOfAllQuestionsProps = {
     user: string;
@@ -72,25 +74,31 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         <>
             <div className="space-between">
                 <button className="button-group-button" id={gameFinished ? "start-button" : undefined} onClick={handleStartGame} disabled={!gameFinished}>Start</button>
-                <button className="button-group-button" disabled={gameFinished} onClick={handleResetCurrentQuiz}>Reset Current Sudoku</button>
+                <button className="button-group-button" disabled={gameFinished} onClick={handleResetCurrentQuiz}>Reset Current Quiz</button>
                 <button className="button-group-button" onClick={handleHardResetGame}>Reset Hard</button>
                 <div>⏱️ Time: {time.toFixed(1)} sec</div>
             </div>
-            <div className="space-between">
-                <div
-                    className="clickable-header"
-                    id="button-kangaroo"
-                    onClick={selectKangarooQuestions}
-                >
-                    <h2 className="header-title">Kangaroo</h2>
-                    <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
-                </div>
-                <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("EASY")}>Easy</button>
-                <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("MEDIUM")}>Medium</button>
-                <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("HARD")}>Hard</button>
-                <button className="button-group-button" onClick={selectRandomQuestions}>Random no K</button>
-                <p>{props.user}</p>
-            </div>
+
+            {showPreviewMode &&
+                <>
+                    <div className="border">
+                        <div className="space-between">
+                            <div
+                                className="clickable-header"
+                                id="button-kangaroo"
+                                onClick={selectKangarooQuestions}
+                            >
+                                <h2 className="header-title">Kangaroo</h2>
+                                <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
+                            </div>
+                            <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("EASY")}>Easy</button>
+                            <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("MEDIUM")}>Medium</button>
+                            <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("HARD")}>Hard</button>
+                            <button className="button-group-button" onClick={selectRandomQuestions}>Random no K</button>
+                        </div>
+                    </div>
+                    <Preview/>
+                </>}
         </>
     )
 }
