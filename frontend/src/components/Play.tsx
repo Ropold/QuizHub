@@ -43,7 +43,30 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         setHasStartedOnce(false);
         setTime(0);
         setIsNewHighScore(false);
+        setCurrentQuestion([]);
     }
+
+    function selectRandomQuestions(){
+        const shuffled: QuestionModel[]= [...props.activeQuestionsWithNoK].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 10);
+        setCurrentQuestion(selected);
+    }
+
+    function selectKangarooQuestions() {
+        const shuffled = [...props.allActiveKangarooQuestions].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 10);
+        setCurrentQuestion(selected);
+    }
+
+    function selectQuestionsByDifficulty(difficulty: "EASY" | "MEDIUM" | "HARD") {
+        const filtered = props.activeQuestionsWithNoK.filter(
+            (q) => q.difficultyEnum === difficulty
+        );
+        const shuffled = filtered.sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 10);
+        setCurrentQuestion(selected);
+    }
+
 
     return (
         <>
@@ -57,13 +80,15 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 <div
                     className="clickable-header"
                     id="button-kangaroo"
+                    onClick={selectKangarooQuestions}
                 >
                     <h2 className="header-title">Kangaroo</h2>
                     <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
                 </div>
-                <button className="button-group-button">Easy</button>
-                <button className="button-group-button">Medium</button>
-                <button className="button-group-button">Hard</button>
+                <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("EASY")}>Easy</button>
+                <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("MEDIUM")}>Medium</button>
+                <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("HARD")}>Hard</button>
+                <button className="button-group-button" onClick={selectRandomQuestions}>Random no K</button>
                 <p>{props.user}</p>
             </div>
         </>
