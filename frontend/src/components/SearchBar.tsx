@@ -51,7 +51,7 @@ export default function SearchBar(props: Readonly<SearchBarProps>) {
                     value={selectedDifficultyEnum}
                     onChange={(e) => setSelectedDifficultyEnum(e.target.value as DifficultyEnum | "")}
                 >
-                    <option value="">Filter by Category</option>
+                    <option value="">Filter by Difficulty</option>
                     {difficultyTypes.map((type) => (
                         <option key={type} value={type}>
                             {getDifficultyEnumDisplayName(type)}
@@ -64,7 +64,7 @@ export default function SearchBar(props: Readonly<SearchBarProps>) {
                     value={categoryTypes}
                     onChange={(e) => setSelectedCategoryEnum(e.target.value as CategoryEnum | "")}
                 >
-                    <option value="">Filter by Animal</option>
+                    <option value="">Filter by Category</option>
                     {categoryTypes.map((type) => (
                         <option key={type} value={type}>
                             {getCategoryEnumDisplayName(type)}

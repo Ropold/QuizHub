@@ -10,7 +10,6 @@ import axios from "axios";
 import NotFound from "./components/NotFound.tsx";
 import Footer from "./components/Footer.tsx";
 import Play from "./components/Play.tsx";
-import Kangaroo from "./components/Kangaroo.tsx";
 import HighScore from "./components/HighScore.tsx";
 import ListOfAllQuestions from "./components/ListOfAllQuestions.tsx";
 import Details from "./components/Details.tsx";
@@ -198,8 +197,7 @@ export default function App() {
         <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Welcome/>}/>
-            <Route path="/play" element={<Play user={user} activeQuestionsWithNoK={activeQuestionsWithNoK}/>} />
-            <Route path="/kangaroo" element={<Kangaroo user={user} allActiveKangarooQuestions={allActiveKangarooQuestions}/>} />
+            <Route path="/play" element={<Play user={user} activeQuestionsWithNoK={activeQuestionsWithNoK} allActiveKangarooQuestions={allActiveKangarooQuestions} highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />
             <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} favorites={favorites} toggleFavorite={toggleFavorite} currentPage={currentPage} setCurrentPage={setCurrentPage} allActiveQuestions={allActiveQuestions} getAllActiveQuestions={getAllActiveQuestions}/>} />
             <Route path="/question/:id" element={<Details user={user} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
             <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />

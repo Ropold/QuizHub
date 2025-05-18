@@ -8,7 +8,7 @@
     display: flex; /* Setzt alle Kinder in eine Zeile */
     align-items: center; /* Zentriert sie vertikal */
     gap: 10px; /* Abstand zwischen den Elementen */
-    width: 900px;
+    width: 950px;
     height: auto; /* Höhe dynamisch halten */
 }
 
