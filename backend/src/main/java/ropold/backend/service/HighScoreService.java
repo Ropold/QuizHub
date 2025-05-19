@@ -16,7 +16,7 @@ public class HighScoreService {
     private final HighScoreRepository highScoreRepository;
     private final IdService idService;
 
-    public List<HighScoreModel> getHighScoresByDifficulty(DifficultyEnum difficultyEnum) {
+    public List<HighScoreModel> getHighScoresByDifficulty(String difficultyEnum) {
         return highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc(difficultyEnum);
     }
 

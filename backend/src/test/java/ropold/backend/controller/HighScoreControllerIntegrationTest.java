@@ -35,10 +35,10 @@ class HighScoreControllerIntegrationTest {
         LocalDateTime fixedDate = LocalDateTime.of(2025, 3, 5, 12, 0, 0);
 
         HighScoreModel highScoreModel1 = new HighScoreModel(
-                "1", "player1", "123456", DifficultyEnum.EASY, "Kangaroo",1,10.2,  fixedDate);
+                "1", "player1", "123456","EASY", "Kangaroo",1,10.2,  fixedDate);
 
         HighScoreModel highScoreModel2 = new HighScoreModel(
-                "2", "player1", "123456", DifficultyEnum.MEDIUM, "Kangaroo",1,14.5, fixedDate.minusMinutes(5));
+                "2", "player1", "123456", "MEDIUM", "Kangaroo",1,14.5, fixedDate.minusMinutes(5));
 
         highScoreRepository.saveAll(List.of(highScoreModel1, highScoreModel2));
     }
@@ -98,7 +98,7 @@ class HighScoreControllerIntegrationTest {
                         null,
                         "player2",
                         "654321",
-                        DifficultyEnum.HARD,
+                        "HARD",
                         "Kangaroo",
                         1,
                         20.5,
@@ -119,7 +119,7 @@ class HighScoreControllerIntegrationTest {
                     String.valueOf(i + 1),
                     "player" + i,
                     "githubId" + i,
-                    DifficultyEnum.EASY,
+                    "EASY",
                     "Kangaroo",
                     0,
                     10.0 + i,

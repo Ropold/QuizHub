@@ -1,9 +1,8 @@
 import type {HighScoreModel} from "./model/HighScoreModel.ts";
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {getDifficultyEnumDisplayName} from "./model/DifficultyEnum.ts";
 import "./styles/HighScore.css"
-import {getCategoryNameForHighScore} from "./utils/getCategoryNameForHighScore.ts";
+import {formatEnumDisplayName} from "./utils/formatEnumDisplayName.ts";
 
 type HighScoreProps = {
     highScoreEasy: HighScoreModel[];
@@ -122,8 +121,8 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
                             <td>{index + 1}</td>
                             <td>{highScore.playerName}</td>
                             <td>{formatDate(highScore.date)}</td>
-                            <td>{getDifficultyEnumDisplayName(highScore.difficultyEnum)}</td>
-                            <td>{getCategoryNameForHighScore(highScore.categoryEnum)}</td>
+                            <td>{formatEnumDisplayName(highScore.difficultyEnum)}</td>
+                            <td>{formatEnumDisplayName(highScore.categoryEnum)}</td>
                             <td>{highScore.wrongAnswerCount}</td>
                             <td>
                                 {highScore.githubId === "anonymousUser"

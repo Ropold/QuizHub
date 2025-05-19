@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface HighScoreRepository extends MongoRepository<HighScoreModel,String> {
 
-    List<HighScoreModel> findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc(DifficultyEnum difficultyEnum);
+    List<HighScoreModel> findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc(String difficultyEnum);
 
 }
