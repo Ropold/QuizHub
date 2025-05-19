@@ -1,3 +1,14 @@
+#category-play{
+    width: 30%;
+}
+
+.play-category-card-image {
+    max-height: 50px;
+    max-width: 70px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
 .win-animation {
     position: fixed;
