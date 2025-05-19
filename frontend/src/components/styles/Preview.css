@@ -1,16 +1,16 @@
 .preview-quiz-container {
     max-width: 600px;
-    margin: 30px auto;
+    margin: 10px auto;
     padding: 20px;
     border: 3px solid #0047ab;
     border-radius: 10px;
-    background-color: #001f3f;
+    background-color: #0d1b4c;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .preview-quiz-title {
-    border-bottom: 2px solid #0074D9;
+    border-bottom: 2px solid #66b3ff;
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
@@ -27,7 +27,7 @@
 }
 
 .preview-quiz-option-button {
-    background-color: #0074D9;
+    background-color: #66b3ff;
     border: none;
     border-radius: 8px;
     padding: 15px;
@@ -39,5 +39,5 @@
 }
 
 .preview-quiz-option-button:hover {
-    background-color: #005fa3;
+    background-color: #007bff;
 }
