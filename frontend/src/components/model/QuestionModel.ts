@@ -16,23 +16,23 @@ export type QuestionModel = {
     answerExplanation: string;
     isActive: boolean;
     githubId: string;
-    imageUrl: string;
+    imageUrl: string | null;
 };
 
 export const DefaultQuestion: QuestionModel = {
     id: "",
-    title: "Loading....",
+    title: "Capital of France",
     difficultyEnum: "EASY",
-    categoryEnum: "ART",
-    questionText: "QuestionText",
+    categoryEnum: "GEOGRAPHY",
+    questionText: "What is the capital of France?",
     options: [
-        { text: "Option 1", isCorrect: false },
-        { text: "Option 2", isCorrect: false },
-        { text: "Option 3", isCorrect: true },
-        { text: "Option 4", isCorrect: false },
+        { text: "Berlin", isCorrect: false },
+        { text: "Madrid", isCorrect: false },
+        { text: "Paris", isCorrect: true },
+        { text: "Rome", isCorrect: false },
     ],
-    answerExplanation: "AnswerExplanation",
+    answerExplanation: "Paris is the capital city of France, known for its art, gastronomy, and culture.",
     isActive: true,
-    githubId: "",
-    imageUrl: "https://dummyimage.com/300x200/cccccc/000000&text=No+Image+Available",
+    githubId: "154427648",
+    imageUrl: null,
 };

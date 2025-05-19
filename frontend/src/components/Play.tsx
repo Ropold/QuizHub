@@ -25,6 +25,8 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     const [intervalId, setIntervalId] = useState<number | null>(null);
     const [hasStartedOnce, setHasStartedOnce] = useState(false);
     const [currentQuestions, setCurrentQuestion] = useState<QuestionModel[]>([])
+    const [categoryEnum, setCategoryEnum] = useState<"EASY" | "MEDIUM" | "HARD" | "KANGAROO" | "RANDOM" | null>(null);
+
 
     const [showWinAnimation, setShowWinAnimation] = useState<boolean>(false);
     const [isNewHighScore, setIsNewHighScore] = useState<boolean>(false);
@@ -48,18 +50,6 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         setCurrentQuestion([]);
     }
 
-    function selectRandomQuestions(){
-        const shuffled: QuestionModel[]= [...props.activeQuestionsWithNoK].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 10);
-        setCurrentQuestion(selected);
-    }
-
-    function selectKangarooQuestions() {
-        const shuffled = [...props.allActiveKangarooQuestions].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 10);
-        setCurrentQuestion(selected);
-    }
-
     function selectQuestionsByDifficulty(difficulty: "EASY" | "MEDIUM" | "HARD") {
         const filtered = props.activeQuestionsWithNoK.filter(
             (q) => q.difficultyEnum === difficulty
@@ -67,7 +57,23 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         const shuffled = filtered.sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 10);
         setCurrentQuestion(selected);
+        setCategoryEnum(difficulty);
     }
+
+    function selectKangarooQuestions() {
+        const shuffled = [...props.allActiveKangarooQuestions].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 10);
+        setCurrentQuestion(selected);
+        setCategoryEnum("KANGAROO");
+    }
+
+    function selectRandomQuestions(){
+        const shuffled: QuestionModel[]= [...props.activeQuestionsWithNoK].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 10);
+        setCurrentQuestion(selected);
+        setCategoryEnum("RANDOM");
+    }
+
 
 
     return (
@@ -84,17 +90,16 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                     <div className="border">
                         <div className="space-between">
                             <div
-                                className="clickable-header"
-                                id="button-kangaroo"
+                                className={`clickable-header ${categoryEnum === "KANGAROO" ? "active-button-deck-difficulty" : ""}`}
                                 onClick={selectKangarooQuestions}
                             >
                                 <h2 className="header-title">Kangaroo</h2>
                                 <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
                             </div>
-                            <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("EASY")}>Easy</button>
-                            <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("MEDIUM")}>Medium</button>
-                            <button className="button-group-button" onClick={() => selectQuestionsByDifficulty("HARD")}>Hard</button>
-                            <button className="button-group-button" onClick={selectRandomQuestions}>Random no K</button>
+                            <button className={`button-group-button ${categoryEnum === "EASY" ? "active-button-deck-difficulty" : ""}`} onClick={() => selectQuestionsByDifficulty("EASY")}>Easy</button>
+                            <button className={`button-group-button ${categoryEnum === "MEDIUM" ? "active-button-deck-difficulty" : ""}`} onClick={() => selectQuestionsByDifficulty("MEDIUM")}>Medium</button>
+                            <button className={`button-group-button ${categoryEnum === "HARD" ? "active-button-deck-difficulty" : ""}`} onClick={() => selectQuestionsByDifficulty("HARD")}>Hard</button>
+                            <button className={`button-group-button ${categoryEnum === "RANDOM" ? "active-button-deck-difficulty" : ""}`} onClick={selectRandomQuestions}>Random no K</button>
                         </div>
                     </div>
                     <Preview/>
