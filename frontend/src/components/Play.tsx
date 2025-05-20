@@ -4,11 +4,12 @@ import type {HighScoreModel} from "./model/HighScoreModel.ts";
 import kangarooLogo from "../assets/categoryEnumImages/kangaroo.jpg";
 import Preview from "./Preview.tsx";
 import "./styles/Play.css"
-import {type CategoryEnum, getCategoryEnumDisplayName} from "./model/CategoryEnum.ts";
+import {type CategoryEnum} from "./model/CategoryEnum.ts";
 import type {DifficultyEnum} from "./model/DifficultyEnum.ts";
 import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
 import {formatEnumDisplayName} from "./utils/formatEnumDisplayName.ts";
+import Game from "../Game.tsx";
 
 type ListOfAllQuestionsProps = {
     user: string;
@@ -37,6 +38,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     const [difficultyEnum, setDifficultyEnum] = useState<DifficultyWithRandom>("RANDOM");
     const [categoryEnum, setCategoryEnum] = useState<CategoryWithRandom>("RANDOM");
     const [wrongAnswerCount, setWrongAnswerCount] = useState<number>(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
     const activeCategories = Array.from(
         new Set(props.activeQuestionsWithNoK.map((q) => q.categoryEnum))
@@ -76,7 +78,10 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     }
 
     function handleResetCurrentQuiz(){
-
+        setCurrentQuestionIndex(0);
+        setWrongAnswerCount(0);
+        setGameFinished(false);
+        setShowPreviewMode(false);
     }
 
     function handleHardResetGame() {
@@ -122,8 +127,15 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 <button className="button-group-button" id={gameFinished ? "start-button" : undefined} onClick={handleStartGame} disabled={!gameFinished}>Start</button>
                 <button className="button-group-button" disabled={gameFinished} onClick={handleResetCurrentQuiz}>Reset Current Quiz</button>
                 <button className="button-group-button" onClick={handleHardResetGame}>Reset Hard</button>
-                <p>Mistakes {wrongAnswerCount}/10</p>
-                <p>⏱️ Time: {time.toFixed(1)} sec</p>
+            </div>
+            <div className="space-between">
+                {!gameFinished &&
+                    <>
+                        <p>Question Index {currentQuestionIndex}/10</p>
+                        <p>Mistakes {wrongAnswerCount}/10</p>
+                        {/*<p>⏱️ Time: {time.toFixed(1)} sec</p>*/}
+                    </>
+                }
             </div>
 
             {showPreviewMode &&
@@ -178,11 +190,12 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                         </label>
                     </div>
 
-
-
                     <Preview/>
                 </>}
 
+            {!showPreviewMode && currentQuestions && currentQuestions.length > 0 && (
+            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} setCurrentQuestionIndex={setCurrentQuestionIndex}/>
+            )}
         </>
     )
 }
