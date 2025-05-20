@@ -109,7 +109,7 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
                         <th>Player-Name</th>
                         <th>Date</th>
                         <th>Difficulty</th>
-                        <th>Category</th>
+                        {cardType !== "Kangaroo" && <th>Category</th>}
                         <th>Wrong Answers</th>
                         <th>Authentication</th>
                         <th>Time</th>
@@ -122,7 +122,7 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
                             <td>{highScore.playerName}</td>
                             <td>{formatDate(highScore.date)}</td>
                             <td>{formatEnumDisplayName(highScore.difficultyEnum)}</td>
-                            <td>{formatEnumDisplayName(highScore.categoryEnum)}</td>
+                            {cardType !== "Kangaroo" && <td>{formatEnumDisplayName(highScore.categoryEnum)}</td>}
                             <td>{highScore.wrongAnswerCount}</td>
                             <td>
                                 {highScore.githubId === "anonymousUser"
