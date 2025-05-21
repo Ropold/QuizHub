@@ -10,6 +10,7 @@ import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
 import {formatEnumDisplayName} from "./utils/formatEnumDisplayName.ts";
 import Game from "./Game.tsx";
+import axios from "axios";
 
 type ListOfAllQuestionsProps = {
     user: string;
@@ -46,6 +47,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
 
     const [showWinAnimation, setShowWinAnimation] = useState<boolean>(false);
     const [isNewHighScore, setIsNewHighScore] = useState<boolean>(false);
+    const [playerName, setPlayerName] = useState<string>("");
     const [showNameInput, setShowNameInput] = useState<boolean>(false);
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupMessage, setPopupMessage] = useState("");
@@ -120,14 +122,52 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         setCategoryEnum(category);
     }
 
-    function difficultyExistsForCategory(difficulty: DifficultyEnum, category: CategoryWithRandom): boolean {
-        if (category === "RANDOM") {
-            return props.activeQuestionsWithNoK.some(q => q.difficultyEnum === difficulty);
+    function postHighScore() {
+        const highScoreData = {
+            id: null,
+            playerName: playerName,
+            githubId: props.user,
+            difficultyEnum: difficultyEnum,
+            categoryEnum: categoryEnum,
+            wrongAnswerCount: wrongAnswerCount,
+            scoreTime: parseFloat(time.toFixed(1)),
+            date: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString()
         }
-        return props.activeQuestionsWithNoK.some(q => q.difficultyEnum === difficulty && q.categoryEnum === category);
+
+        axios.post("/api/high-score", highScoreData)
+            .then(() => {
+                setShowNameInput(false);
+
+                switch (difficultyEnum) {
+                    case "EASY":
+                        props.getHighScoreEasy();
+                        break;
+                    case "MEDIUM":
+                        props.getHighScoreMedium();
+                        break;
+                    case "HARD":
+                        props.getHighScoreHard();
+                        break;
+                    case "KANGAROO":
+                        props.getHighScoreKangaroo();
+                        break;
+                    default:
+                        // Optional: bei RANDOM oder unbekannt ggf. alle laden oder nichts machen
+                        break;
+                }
+            })
+            .catch(console.error);
+
     }
 
-
+    function handleSaveHighScore() {
+        if (playerName.trim().length < 3) {
+            setPopupMessage("Your name must be at least 3 characters long!");
+            setShowPopup(true);
+            return;
+        }
+        postHighScore();
+    }
 
     return (
         <>
@@ -144,6 +184,15 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                     {/*<p>⏱️ Time: {time.toFixed(1)} sec</p>*/}
                 </div>
             }
+
+            {showWinAnimation && (
+                <div className="win-animation">
+                    <p>
+                        🎉 You completed the quiz with {wrongAnswerCount} mistake{wrongAnswerCount !== 1 ? "s" : ""}! Great job!
+                    </p>
+                </div>
+            )}
+
 
             {showPreviewMode &&
                 <>
