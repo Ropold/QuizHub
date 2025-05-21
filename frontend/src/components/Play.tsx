@@ -128,15 +128,14 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 <button className="button-group-button" disabled={gameFinished} onClick={handleResetCurrentQuiz}>Reset Current Quiz</button>
                 <button className="button-group-button" onClick={handleHardResetGame}>Reset Hard</button>
             </div>
-            <div className="space-between">
-                {!gameFinished &&
-                    <>
-                        <p>Question Index {currentQuestionIndex}/10</p>
-                        <p>Mistakes {wrongAnswerCount}/10</p>
-                        {/*<p>⏱️ Time: {time.toFixed(1)} sec</p>*/}
-                    </>
-                }
-            </div>
+
+            {!gameFinished &&
+                <div className="space-between">
+                    <p>Question Index {currentQuestionIndex}/10</p>
+                    <p>Mistakes {wrongAnswerCount}/10</p>
+                    {/*<p>⏱️ Time: {time.toFixed(1)} sec</p>*/}
+                </div>
+            }
 
             {showPreviewMode &&
                 <>

@@ -45,7 +45,7 @@ export default function Game(props: Readonly<GameProps>) {
     return (
         <div>
             <h3 className="game-question">{currentQuestion.questionText}</h3>
-            <div>
+            <div className="game-options">
                 {currentQuestion.options.map((option, idx) => {
                     const isSelected = selectedAnswer === idx.toString();
                     const isCorrect = option.isCorrect;
@@ -73,7 +73,7 @@ export default function Game(props: Readonly<GameProps>) {
                 <div className="game-solution">
                     <h4>{isAnswerCorrect ? "✅ Correct!" : "❌ Wrong!"}</h4>
                     <p><strong>Explanation:</strong> {currentQuestion.answerExplanation}</p>
-                    <button className="button-group-button" onClick={handleNextQuestion}>Next Question</button>
+                    <button className="button-group-button margin-top-20" onClick={handleNextQuestion}>Next Question</button>
                 </div>
             )}
         </div>
