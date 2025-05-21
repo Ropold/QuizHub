@@ -9,7 +9,7 @@ import type {DifficultyEnum} from "./model/DifficultyEnum.ts";
 import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
 import {formatEnumDisplayName} from "./utils/formatEnumDisplayName.ts";
-import Game from "../Game.tsx";
+import Game from "./Game.tsx";
 
 type ListOfAllQuestionsProps = {
     user: string;
@@ -87,11 +87,11 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     function handleHardResetGame() {
         setShowPreviewMode(true);
         setGameFinished(true);
-        setHasStartedOnce(false);
         setTime(0);
         setIsNewHighScore(false);
         setCurrentQuestion([]);
         setWrongAnswerCount(0);
+        setCurrentQuestionIndex(0);
     }
 
     function selectQuestions(difficulty: DifficultyEnum | "RANDOM", category: CategoryEnum | "RANDOM") {
@@ -194,7 +194,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 </>}
 
             {!showPreviewMode && currentQuestions && currentQuestions.length > 0 && (
-            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} setCurrentQuestionIndex={setCurrentQuestionIndex}/>
+            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} currentQuestionIndex={currentQuestionIndex} setCurrentQuestionIndex={setCurrentQuestionIndex}/>
             )}
         </>
     )

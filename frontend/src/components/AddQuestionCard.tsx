@@ -117,7 +117,16 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                         <select
                             className="input-small"
                             value={difficultyEnum}
-                            onChange={(e) => setDifficultyEnum(e.target.value as NullableDifficultyEnum)}
+                            onChange={(e) => {
+                                const selectedDifficulty = e.target.value as NullableDifficultyEnum;
+                                setDifficultyEnum(selectedDifficulty);
+
+                                if (selectedDifficulty === "KANGAROO") {
+                                    setCategoryEnum("KANGAROO");
+                                } else if (categoryEnum === "KANGAROO") {
+                                    setCategoryEnum("");
+                                }
+                            }}
                         >
                             <option value="">Please select difficulty</option>
                             {ALL_DIFFICULTIES.map((difficulty) => (
@@ -134,13 +143,16 @@ export default function AddQuestionCard(props: Readonly<AddQuestionCardProps>) {
                             className="input-small"
                             value={categoryEnum}
                             onChange={(e) => setCategoryEnum(e.target.value as NullableCategoryEnum)}
+                            disabled={difficultyEnum === "KANGAROO"}
                         >
                             <option value="">Please select a category</option>
-                            {ALL_CATEGORIES.map((category) => (
-                                <option key={category} value={category}>
-                                    {getCategoryEnumDisplayName(category)}
-                                </option>
-                            ))}
+                            {ALL_CATEGORIES
+                                .filter((category) => category !== "KANGAROO")
+                                .map((category) => (
+                                    <option key={category} value={category}>
+                                        {getCategoryEnumDisplayName(category)}
+                                    </option>
+                                ))}
                         </select>
                     </label>
                     <img

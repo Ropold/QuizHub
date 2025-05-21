@@ -1,23 +1,33 @@
-import {DefaultQuestion} from "./model/QuestionModel.ts";
-import "./styles/Preview.css"
+import { DefaultQuestion } from "./model/QuestionModel.ts";
 
-export default function Preview(){
+export default function Preview() {
     const question = DefaultQuestion;
 
     return (
-        <>
-            <h3>Preview Mode:</h3>
-            <div className="preview-quiz-container">
-                <h3 className="preview-quiz-title">{question.title}</h3>
-                <p className="preview-quiz-question">{question.questionText}</p>
-                <div className="preview-quiz-options">
-                    {question.options.map((opt, idx) => (
-                        <button key={idx} className="preview-quiz-option-button">
-                            {opt.text}
-                        </button>
-                    ))}
-                </div>
+        <div className="border">
+            <h2>Preview:</h2>
+            <h3 className="game-question">{question.questionText}</h3>
+
+            <div className="game-options">
+                {question.options.map((option, idx) => (
+                    <button
+                        key={idx}
+                        className={`game-option
+              ${option.isCorrect ? "selected correct" : ""}
+            `}
+                        disabled
+                    >
+                        {option.text}
+                    </button>
+                ))}
             </div>
-        </>
+
+            <div className="game-solution">
+                <h4>✅ Correct!</h4>
+                <p>
+                    <strong>Explanation:</strong> {question.answerExplanation}
+                </p>
+            </div>
+        </div>
     );
 }
