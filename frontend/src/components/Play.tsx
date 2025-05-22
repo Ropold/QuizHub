@@ -323,15 +323,40 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                         <div className="space-between">
                             <div
                                 className={`clickable-header ${difficultyEnum === "KANGAROO" ? "active-button-deck-difficulty" : ""}`}
-                                onClick={()=> selectQuestions("KANGAROO", "KANGAROO")}
-                            >
+                                onClick={()=> selectQuestions("KANGAROO", "KANGAROO")}>
                                 <h2 className="header-title">Kangaroo</h2>
                                 <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
                             </div>
-                            <button className={`button-group-button ${difficultyEnum === "RANDOM" ? "active-button-deck-difficulty" : ""}`} onClick={() => {setDifficultyEnum("RANDOM");if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}}>Random Difficulty</button>
-                            <button className={`button-group-button ${difficultyEnum === "EASY" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("EASY"); if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}} disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "EASY" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Easy</button>
-                            <button className={`button-group-button ${difficultyEnum === "MEDIUM" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("MEDIUM");if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}} disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "MEDIUM" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Medium</button>
-                            <button className={`button-group-button ${difficultyEnum === "HARD" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("HARD"); if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}} disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "HARD" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Hard</button>
+
+                            <button
+                                className={`button-group-button ${difficultyEnum === "RANDOM" ? "active-button-deck-difficulty" : ""}`}
+                                onClick={() => {setDifficultyEnum("RANDOM"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM");}}>
+                                Random Difficulty
+                            </button>
+
+                            <button
+                                className={`button-group-button ${difficultyEnum === "EASY" ? "active-button-deck-difficulty" : ""}`}
+                                onClick={() => {setDifficultyEnum("EASY");if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM");}}
+                                disabled={ categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some((q) =>
+                                        q.difficultyEnum === "EASY" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>
+                                Easy
+                            </button>
+
+                            <button
+                                className={`button-group-button ${difficultyEnum === "MEDIUM" ? "active-button-deck-difficulty" : ""}`}
+                                onClick={() => {setDifficultyEnum("MEDIUM");if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM");}}
+                                disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some((q) =>
+                                            q.difficultyEnum === "MEDIUM" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>
+                                Medium
+                            </button>
+
+                            <button
+                                className={`button-group-button ${difficultyEnum === "HARD" ? "active-button-deck-difficulty" : ""}`}
+                                onClick={() => {setDifficultyEnum("HARD"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM");}}
+                                disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some((q) =>
+                                            q.difficultyEnum === "HARD" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>
+                                Hard
+                            </button>
                         </div>
                     </div>
 
