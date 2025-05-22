@@ -8,6 +8,7 @@ type GameProps = {
     setWrongAnswerCount: React.Dispatch<React.SetStateAction<number>>;
     currentQuestionIndex: number;
     setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
+    setShowWinAnimation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function Game(props: Readonly<GameProps>) {
@@ -28,6 +29,19 @@ export default function Game(props: Readonly<GameProps>) {
 
         if (!selectedOption.isCorrect) {
             props.setWrongAnswerCount((prev) => prev + 1);
+        }
+
+        // 🎯 Spiel beenden, wenn das die letzte Frage war
+        const isLastQuestion = props.currentQuestionIndex === props.currentQuestions.length - 1;
+
+        if (isLastQuestion) {
+            setTimeout(() => {
+                props.setShowWinAnimation(true);
+                props.setGameFinished(true);
+                setTimeout(() => {
+                    props.setShowWinAnimation(false);
+                }, 3000);
+            }, 1500); // Warte, bis Lösung kurz gezeigt wurde
         }
     }
 
@@ -73,7 +87,7 @@ export default function Game(props: Readonly<GameProps>) {
                 <div className="game-solution">
                     <h4>{isAnswerCorrect ? "✅ Correct!" : "❌ Wrong!"}</h4>
                     <p><strong>Explanation:</strong> {currentQuestion.answerExplanation}</p>
-                    <button className="button-group-button margin-top-20" onClick={handleNextQuestion}>Next Question</button>
+                    <button className="button-group-button margin-top-20" onClick={handleNextQuestion} disabled={props.currentQuestionIndex === 9}>Next Question</button>
                 </div>
             )}
         </div>

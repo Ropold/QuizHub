@@ -169,6 +169,13 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         postHighScore();
     }
 
+    const getWinClass = () => {
+        if (wrongAnswerCount === 0) return "win-animation win-animation-perfect";
+        if (wrongAnswerCount <= 2) return "win-animation win-animation-good";
+        if (wrongAnswerCount <= 5) return "win-animation win-animation-ok";
+        return "win-animation win-animation-bad";
+    };
+
     return (
         <>
             <div className="space-between">
@@ -177,21 +184,31 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 <button className="button-group-button" onClick={handleHardResetGame}>Reset Hard</button>
             </div>
 
-            {!gameFinished &&
+            {!showPreviewMode &&
                 <div className="space-between">
-                    <p>Question Index {currentQuestionIndex}/10</p>
+                    <p>Question Index {currentQuestionIndex + 1}/10</p>
                     <p>Mistakes {wrongAnswerCount}/10</p>
                     {/*<p>⏱️ Time: {time.toFixed(1)} sec</p>*/}
                 </div>
             }
 
             {showWinAnimation && (
-                <div className="win-animation">
+                <div className={getWinClass()}>
                     <p>
-                        🎉 You completed the quiz with {wrongAnswerCount} mistake{wrongAnswerCount !== 1 ? "s" : ""}! Great job!
+                        🎉 You completed the quiz
+                        {wrongAnswerCount === 0
+                            ? " perfectly with no mistakes! Incredible job! 🌟"
+                            : wrongAnswerCount <= 2
+                                ? ` with only ${wrongAnswerCount} mistake${wrongAnswerCount === 1 ? "" : "s"}. Excellent result! 💪`
+                                : wrongAnswerCount <= 5
+                                    ? ` with ${wrongAnswerCount} mistakes. Solid effort – some tricky questions there! 🧠`
+                                    : wrongAnswerCount < 10
+                                        ? ` with ${wrongAnswerCount} mistakes. It was a tough quiz – better luck next time! 🤔`
+                                        : " but missed every question. That was brutal – give it another shot! 🔄"}
                     </p>
                 </div>
             )}
+
 
 
             {showPreviewMode &&
@@ -250,7 +267,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 </>}
 
             {!showPreviewMode && currentQuestions && currentQuestions.length > 0 && (
-            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} currentQuestionIndex={currentQuestionIndex} setCurrentQuestionIndex={setCurrentQuestionIndex}/>
+            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} currentQuestionIndex={currentQuestionIndex} setCurrentQuestionIndex={setCurrentQuestionIndex} setShowWinAnimation={setShowWinAnimation}/>
             )}
         </>
     )
