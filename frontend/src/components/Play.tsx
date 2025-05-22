@@ -34,7 +34,6 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     const [gameFinished, setGameFinished] = useState<boolean>(true);
     const [time, setTime] = useState<number>(0);
     const [intervalId, setIntervalId] = useState<number | null>(null);
-    const [hasStartedOnce, setHasStartedOnce] = useState(false);
     const [currentQuestions, setCurrentQuestion] = useState<QuestionModel[]>([])
     const [difficultyEnum, setDifficultyEnum] = useState<DifficultyWithRandom>("RANDOM");
     const [categoryEnum, setCategoryEnum] = useState<CategoryWithRandom>("RANDOM");
@@ -169,6 +168,46 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         postHighScore();
     }
 
+    function checkForHighScore() {
+        switch (difficultyEnum) {
+            case "EASY":
+            case "MEDIUM":
+            case "HARD":
+            case "KANGAROO": {
+                const highScores =
+                    difficultyEnum === "EASY" ? props.highScoreEasy :
+                        difficultyEnum === "MEDIUM" ? props.highScoreMedium :
+                            difficultyEnum === "HARD" ? props.highScoreHard :
+                                props.highScoreKangaroo;
+
+                if (highScores.length < 10) {
+                    setIsNewHighScore(true);
+                    setShowNameInput(true);
+                    return;
+                }
+
+                const lowestHighScore = highScores[highScores.length - 1];
+                const isBetterScore =
+                    wrongAnswerCount < lowestHighScore.wrongAnswerCount ||
+                    (wrongAnswerCount === lowestHighScore.wrongAnswerCount && time < lowestHighScore.scoreTime);
+
+                if (isBetterScore) {
+                    setIsNewHighScore(true);
+                    setShowNameInput(true);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    useEffect(() => {
+        if (currentQuestionIndex === 9) {
+            checkForHighScore();
+        }
+    }, [currentQuestionIndex]);
+
     const getWinClass = () => {
         if (wrongAnswerCount === 0) return "win-animation win-animation-perfect";
         if (wrongAnswerCount <= 2) return "win-animation win-animation-good";
@@ -192,6 +231,35 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 </div>
             }
 
+            {isNewHighScore && showNameInput && (
+                <form
+                    className="high-score-input"
+                    onSubmit={(e) => {
+                        e.preventDefault(); // Verhindert das Neuladen der Seite
+                        handleSaveHighScore();
+                    }}
+                >
+                    <label htmlFor="playerName">
+                        Congratulations! You secured a spot on the high score list. Enter your name:
+                    </label>
+                    <input
+                        className="playerName"
+                        type="text"
+                        id="playerName"
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}
+                        placeholder="Enter your name"
+                    />
+                    <button
+                        className="button-group-button"
+                        id="button-border-animation"
+                        type="submit"
+                    >
+                        Save Highscore
+                    </button>
+                </form>
+            )}
+
             {showWinAnimation && (
                 <div className={getWinClass()}>
                     <p>
@@ -209,7 +277,19 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 </div>
             )}
 
-
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-content">
+                        <h3>Hinweis</h3>
+                        <p>{popupMessage}</p>
+                        <div className="popup-actions">
+                            <button onClick={() => setShowPopup(false)} className="popup-confirm">
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {showPreviewMode &&
                 <>
