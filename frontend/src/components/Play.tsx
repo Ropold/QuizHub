@@ -5,7 +5,7 @@ import kangarooLogo from "../assets/categoryEnumImages/kangaroo.jpg";
 import Preview from "./Preview.tsx";
 import "./styles/Play.css"
 import {type CategoryEnum} from "./model/CategoryEnum.ts";
-import type {DifficultyEnum} from "./model/DifficultyEnum.ts";
+import type {DifficultyEnum, NullableDifficultyEnum} from "./model/DifficultyEnum.ts";
 import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
 import {formatEnumDisplayName} from "./utils/formatEnumDisplayName.ts";
@@ -24,9 +24,10 @@ type ListOfAllQuestionsProps = {
     getHighScoreHard: () => void;
     highScoreKangaroo: HighScoreModel[];
     getHighScoreKangaroo: () => void;
+    highScoreRandom: HighScoreModel[];
+    getHighScoreRandom: () => void;
 }
 
-type DifficultyWithRandom = DifficultyEnum | "RANDOM";
 type CategoryWithRandom = CategoryEnum | "RANDOM";
 
 export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
@@ -34,7 +35,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     const [gameFinished, setGameFinished] = useState<boolean>(true);
     const [intervalId, setIntervalId] = useState<number | null>(null);
     const [currentQuestions, setCurrentQuestion] = useState<QuestionModel[]>([])
-    const [difficultyEnum, setDifficultyEnum] = useState<DifficultyWithRandom>("RANDOM");
+    const [difficultyEnum, setDifficultyEnum] = useState<NullableDifficultyEnum>("");
     const [categoryEnum, setCategoryEnum] = useState<CategoryWithRandom>("RANDOM");
     const [wrongAnswerCount, setWrongAnswerCount] = useState<number>(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -110,9 +111,11 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         setCurrentQuestion([]);
         setWrongAnswerCount(0);
         setCurrentQuestionIndex(0);
+        setDifficultyEnum("");
+        setCategoryEnum("RANDOM");
     }
 
-    function selectQuestions(difficulty: DifficultyEnum | "RANDOM", category: CategoryEnum | "RANDOM") {
+    function selectQuestions(difficulty: DifficultyEnum , category: CategoryEnum | "RANDOM") {
         let questions: QuestionModel[];
 
         if (difficulty === "KANGAROO") {
@@ -167,6 +170,9 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                     case "KANGAROO":
                         props.getHighScoreKangaroo();
                         break;
+                    case "RANDOM":
+                        props.getHighScoreRandom();
+                        break;
                     default:
                         // Optional: bei RANDOM oder unbekannt ggf. alle laden oder nichts machen
                         break;
@@ -190,12 +196,14 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
             case "EASY":
             case "MEDIUM":
             case "HARD":
-            case "KANGAROO": {
+            case "KANGAROO":
+            case "RANDOM": {
                 const highScores =
                     difficultyEnum === "EASY" ? props.highScoreEasy :
                         difficultyEnum === "MEDIUM" ? props.highScoreMedium :
                             difficultyEnum === "HARD" ? props.highScoreHard :
-                                props.highScoreKangaroo;
+                                difficultyEnum === "KANGAROO" ? props.highScoreKangaroo :
+                                    props.highScoreRandom;
 
                 if (highScores.length < 10) {
                     setIsNewHighScore(true);
@@ -235,7 +243,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     return (
         <>
             <div className="space-between">
-                <button className="button-group-button" id={gameFinished ? "start-button" : undefined} onClick={handleStartGame} disabled={!gameFinished}>Start</button>
+                <button className="button-group-button" id={gameFinished && difficultyEnum !== "" ? "start-button" : undefined} onClick={handleStartGame} disabled={!gameFinished || difficultyEnum === ""}>Start</button>
                 <button className="button-group-button" disabled={gameFinished} onClick={handleResetCurrentQuiz}>Reset Current Quiz</button>
                 <button className="button-group-button" onClick={handleHardResetGame}>Reset Hard</button>
             </div>
@@ -320,10 +328,10 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                                 <h2 className="header-title">Kangaroo</h2>
                                 <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
                             </div>
-                            <button className={`button-group-button ${difficultyEnum === "RANDOM" ? "active-button-deck-difficulty" : ""}`} onClick={() => {setDifficultyEnum("RANDOM"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}}>Random Difficulty</button>
-                            <button className={`button-group-button ${difficultyEnum === "EASY" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("EASY"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM"); }} disabled={!props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "EASY" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Easy</button>
-                            <button className={`button-group-button ${difficultyEnum === "MEDIUM" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("MEDIUM"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM"); }} disabled={!props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "MEDIUM" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Medium</button>
-                            <button className={`button-group-button ${difficultyEnum === "HARD" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("HARD"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM"); }} disabled={!props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "HARD" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Hard</button>
+                            <button className={`button-group-button ${difficultyEnum === "RANDOM" ? "active-button-deck-difficulty" : ""}`} onClick={() => {setDifficultyEnum("RANDOM");if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}}>Random Difficulty</button>
+                            <button className={`button-group-button ${difficultyEnum === "EASY" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("EASY"); if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}} disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "EASY" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Easy</button>
+                            <button className={`button-group-button ${difficultyEnum === "MEDIUM" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("MEDIUM");if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}} disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "MEDIUM" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Medium</button>
+                            <button className={`button-group-button ${difficultyEnum === "HARD" ? "active-button-deck-difficulty" : ""}`} onClick={() => { setDifficultyEnum("HARD"); if(categoryEnum === "KANGAROO") setCategoryEnum("RANDOM")}} disabled={categoryEnum !== "KANGAROO" && !props.activeQuestionsWithNoK.some(q => q.difficultyEnum === "HARD" && (categoryEnum === "RANDOM" || q.categoryEnum === categoryEnum))}>Hard</button>
                         </div>
                     </div>
 
@@ -332,7 +340,22 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                         <label className="search-bar" id="category-play">
                             <select
                                 value={difficultyEnum === "KANGAROO" ? "KANGAROO" : categoryEnum}
-                                onChange={(e) => setCategoryEnum(e.target.value as CategoryWithRandom)}
+                                onChange={(e) => {
+                                    const selectedCategory = e.target.value as CategoryWithRandom;
+                                    setCategoryEnum(selectedCategory);
+
+                                    if (
+                                        difficultyEnum &&
+                                        difficultyEnum !== "RANDOM" &&
+                                        difficultyEnum !== "KANGAROO" &&
+                                        !props.activeQuestionsWithNoK.some(q =>
+                                            q.difficultyEnum === difficultyEnum &&
+                                            (selectedCategory === "RANDOM" || q.categoryEnum === selectedCategory)
+                                        )
+                                    ) {
+                                        setDifficultyEnum("RANDOM");
+                                    }
+                                }}
                                 disabled={difficultyEnum === "KANGAROO"}
                             >
                                 {difficultyEnum === "KANGAROO" ? (
@@ -348,17 +371,18 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                                     </>
                                 )}
                             </select>
-                        <img
-                            src={
-                                categoryEnum !== "RANDOM"
-                                    ? categoryEnumImages[categoryEnum as CategoryEnum]
-                                    : headerLogo
-                            }
-                            alt={categoryEnum || "logo quiz hub"}
-                            className="play-category-card-image"
-                        />
+                            <img
+                                src={
+                                    categoryEnum !== "RANDOM"
+                                        ? categoryEnumImages[categoryEnum as CategoryEnum]
+                                        : headerLogo
+                                }
+                                alt={categoryEnum || "logo quiz hub"}
+                                className="play-category-card-image"
+                            />
                         </label>
                     </div>
+
 
                     <Preview/>
                 </>}

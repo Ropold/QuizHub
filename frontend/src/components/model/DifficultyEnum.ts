@@ -1,14 +1,15 @@
-export type DifficultyEnum = "EASY" | "MEDIUM" | "HARD" | "KANGAROO";
+export type DifficultyEnum = "KANGAROO" | "RANDOM" | "EASY" | "MEDIUM" | "HARD";
 export type NullableDifficultyEnum = DifficultyEnum | "";
 
-export const ALL_DIFFICULTIES: DifficultyEnum[] = ["EASY", "MEDIUM", "HARD", "KANGAROO"];
+export const ALL_DIFFICULTIES: DifficultyEnum[] = ["KANGAROO", "RANDOM", "EASY", "MEDIUM", "HARD"];
 
 export function getDifficultyEnumDisplayName(difficultyEnum: NullableDifficultyEnum): string {
     const difficultyEnumDisplayNames: Record<DifficultyEnum, string> = {
+        KANGAROO: "Kangaroo",
+        RANDOM: "Random",
         EASY: "Easy",
         MEDIUM: "Medium",
         HARD: "Hard",
-        KANGAROO: "Kangaroo"
     };
 
     if (difficultyEnum === "") return "Please select a difficulty";

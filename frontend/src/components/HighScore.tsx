@@ -13,6 +13,8 @@ type HighScoreProps = {
     getHighScoreHard: () => void;
     highScoreKangaroo: HighScoreModel[];
     getHighScoreKangaroo: () => void;
+    highScoreRandom: HighScoreModel[];
+    getHighScoreRandom: () => void;
 }
 
 const formatDate = (date: string) => {
@@ -54,14 +56,15 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
     }
 
     useEffect(() => {
-        fetchGithubUsernames([...props.highScoreEasy, ...props.highScoreMedium, ...props.highScoreHard, ...props.highScoreKangaroo]);
-    }, [props.highScoreEasy, props.highScoreMedium, props.highScoreHard, props.highScoreKangaroo]);
+        fetchGithubUsernames([...props.highScoreKangaroo, ...props.highScoreRandom, ...props.highScoreEasy, ...props.highScoreMedium, ...props.highScoreHard]);
+    }, [props.highScoreEasy, props.highScoreMedium, props.highScoreHard, props.highScoreKangaroo, props.highScoreRandom]);
 
     useEffect(() => {
         props.getHighScoreEasy();
         props.getHighScoreMedium();
         props.getHighScoreHard();
         props.getHighScoreKangaroo();
+        props.getHighScoreRandom();
     }, []);
 
     const handleTableSelect = (tableId: string) => {
@@ -143,17 +146,19 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
             <div className={selectedTable === null ? 'high-score-item-container-compressed' : 'high-score-item-container-detailed'}>
                 {selectedTable === null ? (
                     <>
+                        {renderCompressedTable(props.highScoreKangaroo, "Kangaroo")}
+                        {renderCompressedTable(props.highScoreRandom, "Random")}
                         {renderCompressedTable(props.highScoreEasy, "Easy")}
                         {renderCompressedTable(props.highScoreMedium, "Medium")}
                         {renderCompressedTable(props.highScoreHard, "Hard")}
-                        {renderCompressedTable(props.highScoreKangaroo, "Kangaroo")}
                     </>
                 ) : (
                     <>
+                        {renderDetailedTable(props.highScoreKangaroo, "Kangaroo", selectedTable === "Kangaroo")}
+                        {renderDetailedTable(props.highScoreRandom, "Random", selectedTable === "Random")}
                         {renderDetailedTable(props.highScoreEasy, "Easy", selectedTable === "Easy")}
                         {renderDetailedTable(props.highScoreMedium, "Medium", selectedTable === "Medium")}
                         {renderDetailedTable(props.highScoreHard, "Hard", selectedTable === "Hard")}
-                        {renderDetailedTable(props.highScoreKangaroo, "Kangaroo", selectedTable === "Kangaroo")}
                     </>
                 )}
             </div>
