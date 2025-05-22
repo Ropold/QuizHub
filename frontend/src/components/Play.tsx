@@ -32,13 +32,13 @@ type CategoryWithRandom = CategoryEnum | "RANDOM";
 export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     const [showPreviewMode, setShowPreviewMode] = useState<boolean>(true);
     const [gameFinished, setGameFinished] = useState<boolean>(true);
-    const [time, setTime] = useState<number>(0);
     const [intervalId, setIntervalId] = useState<number | null>(null);
     const [currentQuestions, setCurrentQuestion] = useState<QuestionModel[]>([])
     const [difficultyEnum, setDifficultyEnum] = useState<DifficultyWithRandom>("RANDOM");
     const [categoryEnum, setCategoryEnum] = useState<CategoryWithRandom>("RANDOM");
     const [wrongAnswerCount, setWrongAnswerCount] = useState<number>(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+    const [resetSignal, setResetSignal] = useState<number>(0);
 
     const activeCategories = Array.from(
         new Set(props.activeQuestionsWithNoK.map((q) => q.categoryEnum))
@@ -47,6 +47,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     const [showWinAnimation, setShowWinAnimation] = useState<boolean>(false);
     const [isNewHighScore, setIsNewHighScore] = useState<boolean>(false);
     const [playerName, setPlayerName] = useState<string>("");
+    const [time, setTime] = useState<number>(0);
     const [showNameInput, setShowNameInput] = useState<boolean>(false);
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupMessage, setPopupMessage] = useState("");
@@ -65,25 +66,41 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     }, [showPreviewMode, gameFinished]);
 
 
-    function handleStartGame(){
+    function handleStartGame() {
         if (!difficultyEnum || !categoryEnum) {
             setPopupMessage("Please select both difficulty and category.");
             setShowPopup(true);
             return;
         }
 
+        // Reset all relevant state
+        setCurrentQuestionIndex(0);
+        setWrongAnswerCount(0);
+        setIsNewHighScore(false);
+        setShowNameInput(false);
+        setShowWinAnimation(false);
+        setTime(0);
+        setResetSignal(prev => prev + 1);
+
+        // Select questions and start game
         selectQuestions(difficultyEnum, categoryEnum);
         setShowPreviewMode(false);
         setGameFinished(false);
         setShowNameInput(false);
     }
 
-    function handleResetCurrentQuiz(){
+
+    function handleResetCurrentQuiz() {
         setCurrentQuestionIndex(0);
         setWrongAnswerCount(0);
+        setIsNewHighScore(false);
+        setShowNameInput(false);
+        setShowWinAnimation(false);
         setGameFinished(false);
         setShowPreviewMode(false);
+        setResetSignal(prev => prev + 1);
     }
+
 
     function handleHardResetGame() {
         setShowPreviewMode(true);
@@ -203,10 +220,10 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
     }
 
     useEffect(() => {
-        if (currentQuestionIndex === 9) {
+        if (gameFinished && currentQuestionIndex === 9) {
             checkForHighScore();
         }
-    }, [currentQuestionIndex]);
+    }, [gameFinished]);
 
     const getWinClass = () => {
         if (wrongAnswerCount === 0) return "win-animation win-animation-perfect";
@@ -294,7 +311,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
             {showPreviewMode &&
                 <>
                     <div>
-                        <h4>Choose a difficulty:</h4>
+                        <h4>Choose a Difficulty:</h4>
                         <div className="space-between">
                             <div
                                 className={`clickable-header ${difficultyEnum === "KANGAROO" ? "active-button-deck-difficulty" : ""}`}
@@ -311,7 +328,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                     </div>
 
                     <div>
-                        <h4>Choose a Category</h4>
+                        <h4>Choose a Category:</h4>
                         <label className="search-bar" id="category-play">
                             <select
                                 value={difficultyEnum === "KANGAROO" ? "KANGAROO" : categoryEnum}
@@ -347,7 +364,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                 </>}
 
             {!showPreviewMode && currentQuestions && currentQuestions.length > 0 && (
-            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} currentQuestionIndex={currentQuestionIndex} setCurrentQuestionIndex={setCurrentQuestionIndex} setShowWinAnimation={setShowWinAnimation}/>
+            <Game currentQuestions={currentQuestions} setGameFinished={setGameFinished} setWrongAnswerCount={setWrongAnswerCount} currentQuestionIndex={currentQuestionIndex} setCurrentQuestionIndex={setCurrentQuestionIndex} setShowWinAnimation={setShowWinAnimation} resetSignal={resetSignal}/>
             )}
         </>
     )

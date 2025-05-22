@@ -1,5 +1,5 @@
 import type {QuestionModel} from "./model/QuestionModel.ts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import "./styles/Game.css"
 
 type GameProps = {
@@ -9,6 +9,7 @@ type GameProps = {
     currentQuestionIndex: number;
     setCurrentQuestionIndex: React.Dispatch<React.SetStateAction<number>>;
     setShowWinAnimation: React.Dispatch<React.SetStateAction<boolean>>;
+    resetSignal:number;
 }
 
 export default function Game(props: Readonly<GameProps>) {
@@ -40,8 +41,8 @@ export default function Game(props: Readonly<GameProps>) {
                 props.setGameFinished(true);
                 setTimeout(() => {
                     props.setShowWinAnimation(false);
-                }, 3000);
-            }, 1500); // Warte, bis Lösung kurz gezeigt wurde
+                }, 5000);
+            }, 1000); // Warte, bis Lösung kurz gezeigt wurde
         }
     }
 
@@ -55,6 +56,13 @@ export default function Game(props: Readonly<GameProps>) {
             setShowSolution(false);
         }
     }
+
+    useEffect(() => {
+        setSelectedAnswer(null);
+        setIsAnswerCorrect(null);
+        setShowSolution(false);
+    }, [props.resetSignal, props.currentQuestionIndex]);
+
 
     return (
         <div>
