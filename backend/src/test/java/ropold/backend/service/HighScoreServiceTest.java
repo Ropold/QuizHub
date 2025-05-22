@@ -132,7 +132,7 @@ class HighScoreServiceTest {
                 saved.id() == null &&
                         saved.playerName().equals("player1") &&
                         saved.githubId().equals("123456") &&
-                        saved.difficultyEnum() == DifficultyEnum.EASY &&
+                        saved.difficultyEnum().equals(DifficultyEnum.EASY) &&
                         saved.scoreTime() == 11.2 &&
                         saved.date().equals(fixedDate)
         ));

@@ -31,9 +31,10 @@
 }
 
 .add-question-card-image {
-    height: auto;
-    width: 100px;
+    max-height: 80px;
+    max-width: 100px;
     border-radius: 10px;
+    object-fit: cover;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 

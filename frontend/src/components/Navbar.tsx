@@ -4,7 +4,6 @@ import "./styles/Buttons.css";
 import "./styles/Navbar.css";
 import highScoreLogo from "../assets/highscore-logo.jpg"
 import headerLogo from "../assets/quiz-logo-header.jpg"
-import kangarooLogo from "../assets/categoryEnumImages/kangaroo.jpg"
 
 type NavbarProps = {
     getUser: () => void;
@@ -46,17 +45,6 @@ export default function Navbar(props: Readonly<NavbarProps>) {
             >
                 <h2 className="header-title">Play</h2>
                 <img src={headerLogo} alt="Quiz Hub Logo" className="logo-image" />
-            </div>
-
-            <div
-                className="clickable-header"
-                id="button-kangaroo"
-                onClick={() => {
-                    navigate("/kangaroo");
-                }}
-            >
-                <h2 className="header-title">Kangaroo</h2>
-                <img src={kangarooLogo} alt="Kangaroo Logo" className="logo-image" />
             </div>
 
             <div

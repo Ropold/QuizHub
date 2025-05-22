@@ -1,8 +1,8 @@
 import type {HighScoreModel} from "./model/HighScoreModel.ts";
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {getDifficultyEnumDisplayName} from "./model/DifficultyEnum.ts";
 import "./styles/HighScore.css"
+import {formatEnumDisplayName} from "./utils/formatEnumDisplayName.ts";
 
 type HighScoreProps = {
     highScoreEasy: HighScoreModel[];
@@ -13,6 +13,8 @@ type HighScoreProps = {
     getHighScoreHard: () => void;
     highScoreKangaroo: HighScoreModel[];
     getHighScoreKangaroo: () => void;
+    highScoreRandom: HighScoreModel[];
+    getHighScoreRandom: () => void;
 }
 
 const formatDate = (date: string) => {
@@ -54,14 +56,15 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
     }
 
     useEffect(() => {
-        fetchGithubUsernames([...props.highScoreEasy, ...props.highScoreMedium, ...props.highScoreHard, ...props.highScoreKangaroo]);
-    }, [props.highScoreEasy, props.highScoreMedium, props.highScoreHard, props.highScoreKangaroo]);
+        fetchGithubUsernames([...props.highScoreKangaroo, ...props.highScoreRandom, ...props.highScoreEasy, ...props.highScoreMedium, ...props.highScoreHard]);
+    }, [props.highScoreEasy, props.highScoreMedium, props.highScoreHard, props.highScoreKangaroo, props.highScoreRandom]);
 
     useEffect(() => {
         props.getHighScoreEasy();
         props.getHighScoreMedium();
         props.getHighScoreHard();
         props.getHighScoreKangaroo();
+        props.getHighScoreRandom();
     }, []);
 
     const handleTableSelect = (tableId: string) => {
@@ -109,7 +112,7 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
                         <th>Player-Name</th>
                         <th>Date</th>
                         <th>Difficulty</th>
-                        <th>Category</th>
+                        {cardType !== "Kangaroo" && <th>Category</th>}
                         <th>Wrong Answers</th>
                         <th>Authentication</th>
                         <th>Time</th>
@@ -121,8 +124,8 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
                             <td>{index + 1}</td>
                             <td>{highScore.playerName}</td>
                             <td>{formatDate(highScore.date)}</td>
-                            <td>{getDifficultyEnumDisplayName(highScore.difficultyEnum)}</td>
-                            <td>{highScore.categoryEnum}</td>
+                            <td>{formatEnumDisplayName(highScore.difficultyEnum)}</td>
+                            {cardType !== "Kangaroo" && <td>{formatEnumDisplayName(highScore.categoryEnum)}</td>}
                             <td>{highScore.wrongAnswerCount}</td>
                             <td>
                                 {highScore.githubId === "anonymousUser"
@@ -143,17 +146,19 @@ export default function HighScore(props: Readonly<HighScoreProps>) {
             <div className={selectedTable === null ? 'high-score-item-container-compressed' : 'high-score-item-container-detailed'}>
                 {selectedTable === null ? (
                     <>
+                        {renderCompressedTable(props.highScoreKangaroo, "Kangaroo")}
+                        {renderCompressedTable(props.highScoreRandom, "Random")}
                         {renderCompressedTable(props.highScoreEasy, "Easy")}
                         {renderCompressedTable(props.highScoreMedium, "Medium")}
                         {renderCompressedTable(props.highScoreHard, "Hard")}
-                        {renderCompressedTable(props.highScoreKangaroo, "Kangaroo")}
                     </>
                 ) : (
                     <>
+                        {renderDetailedTable(props.highScoreKangaroo, "Kangaroo", selectedTable === "Kangaroo")}
+                        {renderDetailedTable(props.highScoreRandom, "Random", selectedTable === "Random")}
                         {renderDetailedTable(props.highScoreEasy, "Easy", selectedTable === "Easy")}
                         {renderDetailedTable(props.highScoreMedium, "Medium", selectedTable === "Medium")}
                         {renderDetailedTable(props.highScoreHard, "Hard", selectedTable === "Hard")}
-                        {renderDetailedTable(props.highScoreKangaroo, "Kangaroo", selectedTable === "Kangaroo")}
                     </>
                 )}
             </div>

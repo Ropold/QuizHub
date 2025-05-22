@@ -35,7 +35,7 @@ class HighScoreControllerIntegrationTest {
         LocalDateTime fixedDate = LocalDateTime.of(2025, 3, 5, 12, 0, 0);
 
         HighScoreModel highScoreModel1 = new HighScoreModel(
-                "1", "player1", "123456", DifficultyEnum.EASY, "Kangaroo",1,10.2,  fixedDate);
+                "1", "player1", "123456",DifficultyEnum.EASY, "Kangaroo",1,10.2,  fixedDate);
 
         HighScoreModel highScoreModel2 = new HighScoreModel(
                 "2", "player1", "123456", DifficultyEnum.MEDIUM, "Kangaroo",1,14.5, fixedDate.minusMinutes(5));

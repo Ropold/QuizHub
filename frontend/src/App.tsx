@@ -10,7 +10,6 @@ import axios from "axios";
 import NotFound from "./components/NotFound.tsx";
 import Footer from "./components/Footer.tsx";
 import Play from "./components/Play.tsx";
-import Kangaroo from "./components/Kangaroo.tsx";
 import HighScore from "./components/HighScore.tsx";
 import ListOfAllQuestions from "./components/ListOfAllQuestions.tsx";
 import Details from "./components/Details.tsx";
@@ -26,10 +25,11 @@ export default function App() {
     const [allActiveQuestions, setAllActiveQuestions] = useState<QuestionModel[]>([]);
     const [favorites, setFavorites] = useState<string[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [highScoreKangaroo, setHighScoreKangaroo] = useState<HighScoreModel[]>([]);
+    const [highScoreRandom, setHighScoreRandom] = useState<HighScoreModel[]>([]);
     const [highScoreEasy, setHighScoreEasy] = useState<HighScoreModel[]>([]);
     const [highScoreMedium, setHighScoreMedium] = useState<HighScoreModel[]>([]);
     const [highScoreHard, setHighScoreHard] = useState<HighScoreModel[]>([]);
-    const [highScoreKangaroo, setHighScoreKangaroo] = useState<HighScoreModel[]>([]);
 
 
     function getUser() {
@@ -192,17 +192,27 @@ export default function App() {
             });
     }
 
+    function getHighScoreRandom() {
+        axios
+            .get("/api/high-score/RANDOM")
+            .then((response) => {
+                setHighScoreRandom(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching high score: ", error);
+            });
+    }
+
   return (
     <>
         <Navbar getUser={getUser} getUserDetails={getUserDetails} user={user}/>
         <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Welcome/>}/>
-            <Route path="/play" element={<Play user={user} activeQuestionsWithNoK={activeQuestionsWithNoK}/>} />
-            <Route path="/kangaroo" element={<Kangaroo user={user} allActiveKangarooQuestions={allActiveKangarooQuestions}/>} />
+            <Route path="/play" element={<Play user={user} activeQuestionsWithNoK={activeQuestionsWithNoK} allActiveKangarooQuestions={allActiveKangarooQuestions} highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo} highScoreRandom={highScoreRandom} getHighScoreRandom={getHighScoreRandom} />} />
             <Route path="/list-of-all-questions" element={<ListOfAllQuestions user={user} favorites={favorites} toggleFavorite={toggleFavorite} currentPage={currentPage} setCurrentPage={setCurrentPage} allActiveQuestions={allActiveQuestions} getAllActiveQuestions={getAllActiveQuestions}/>} />
             <Route path="/question/:id" element={<Details user={user} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
-            <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo}/>} />
+            <Route path="/high-score" element={<HighScore highScoreEasy={highScoreEasy} getHighScoreEasy={getHighScoreEasy} highScoreMedium={highScoreMedium} getHighScoreMedium={getHighScoreMedium} highScoreHard={highScoreHard} getHighScoreHard={getHighScoreHard} highScoreKangaroo={highScoreKangaroo} getHighScoreKangaroo={getHighScoreKangaroo} highScoreRandom={highScoreRandom} getHighScoreRandom={getHighScoreRandom}/>} />
 
             <Route element={<ProtectedRoute user={user}/>}>
                 <Route path="/profile/*" element={<Profile user={user} userDetails={userDetails} handleNewQuestionSubmit={handleNewQuestionSubmit} allQuestions={allQuestions} getAllQuestions={getAllQuestions} setAllQuestions={setAllQuestions} favorites={favorites} toggleFavorite={toggleFavorite}/>} />
