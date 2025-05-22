@@ -4,7 +4,7 @@ import type {HighScoreModel} from "./model/HighScoreModel.ts";
 import kangarooLogo from "../assets/categoryEnumImages/kangaroo.jpg";
 import Preview from "./Preview.tsx";
 import "./styles/Play.css"
-import {type CategoryEnum} from "./model/CategoryEnum.ts";
+import {ALL_CATEGORIES, type CategoryEnum} from "./model/CategoryEnum.ts";
 import type {DifficultyEnum, NullableDifficultyEnum} from "./model/DifficultyEnum.ts";
 import {categoryEnumImages} from "./utils/CategoryEnumImages.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
@@ -43,7 +43,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
 
     const activeCategories = Array.from(
         new Set(props.activeQuestionsWithNoK.map((q) => q.categoryEnum))
-    ).sort();
+    ).sort((a, b) => ALL_CATEGORIES.indexOf(a) - ALL_CATEGORIES.indexOf(b));
 
     const [showWinAnimation, setShowWinAnimation] = useState<boolean>(false);
     const [isNewHighScore, setIsNewHighScore] = useState<boolean>(false);
@@ -331,7 +331,7 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                             <button
                                 className={`button-group-button ${difficultyEnum === "RANDOM" ? "active-button-deck-difficulty" : ""}`}
                                 onClick={() => {setDifficultyEnum("RANDOM"); if (categoryEnum === "KANGAROO") setCategoryEnum("RANDOM");}}>
-                                Random Difficulty
+                                Random
                             </button>
 
                             <button

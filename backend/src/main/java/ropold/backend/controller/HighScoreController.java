@@ -17,7 +17,7 @@ public class HighScoreController {
     private final HighScoreService highScoreService;
 
     @GetMapping("/{difficultyEnum}")
-    public List<HighScoreModel> getHighScoresByDifficulty(@PathVariable String difficultyEnum) {
+    public List<HighScoreModel> getHighScoresByDifficulty(@PathVariable DifficultyEnum difficultyEnum) {
         return highScoreService.getHighScoresByDifficulty(difficultyEnum);
     }
 

@@ -24,7 +24,7 @@ class HighScoreServiceTest {
             "1",
             "player1",
             "123456",
-            "EASY",
+            DifficultyEnum.EASY,
             "Kangaroo",
             0,
             10.2,
@@ -35,7 +35,7 @@ class HighScoreServiceTest {
             "2",
             "player1",
             "123456",
-            "MEDIUM",
+            DifficultyEnum.MEDIUM,
             "Kangaroo",
             0,
             14.5,
@@ -53,9 +53,9 @@ class HighScoreServiceTest {
     @Test
     void getHighScoresByDifficulty_shouldReturnHighScores() {
         // Given
-        when(highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc("EASY")).thenReturn(List.of(highScoreModel1));
+        when(highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc(DifficultyEnum.EASY)).thenReturn(List.of(highScoreModel1));
 
-        List<HighScoreModel> expected = highScoreService.getHighScoresByDifficulty("EASY");
+        List<HighScoreModel> expected = highScoreService.getHighScoresByDifficulty(DifficultyEnum.EASY);
 
         assertEquals(expected, List.of(highScoreModel1));
     }
@@ -68,13 +68,13 @@ class HighScoreServiceTest {
 
     @Test
     void addHighScore_whenOnlyTwoHighScoreAreInRepo() {
-        HighScoreModel highScore1 = new HighScoreModel("1", "Player1", "12345", "EASY","Kangaroo", 0,10.0, LocalDateTime.now());
-        HighScoreModel highScore2 = new HighScoreModel("2", "Player2", "54321", "EASY","Kangaroo",0,15.0, LocalDateTime.now());
+        HighScoreModel highScore1 = new HighScoreModel("1", "Player1", "12345", DifficultyEnum.EASY,"Kangaroo", 0,10.0, LocalDateTime.now());
+        HighScoreModel highScore2 = new HighScoreModel("2", "Player2", "54321", DifficultyEnum.EASY,"Kangaroo",0,15.0, LocalDateTime.now());
 
-        when(highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc("EASY"))
+        when(highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc(DifficultyEnum.EASY))
                 .thenReturn(List.of(highScore1, highScore2));
 
-        HighScoreModel newHighScore = new HighScoreModel("3", "Player3", "67890", "EASY", "Kangaroo",0,12.0, LocalDateTime.now());
+        HighScoreModel newHighScore = new HighScoreModel("3", "Player3", "67890", DifficultyEnum.EASY, "Kangaroo",0,12.0, LocalDateTime.now());
 
         when(highScoreRepository.save(any(HighScoreModel.class))).thenReturn(newHighScore);
 
@@ -92,26 +92,26 @@ class HighScoreServiceTest {
         LocalDateTime fixedDate = LocalDateTime.of(2025, 3, 5, 12, 0, 0);
 
         List<HighScoreModel> existingScores = List.of(
-                new HighScoreModel("1", "player1", "123456", "EASY","Kangaroo",0,10.2, fixedDate),
-                new HighScoreModel("2", "player1", "123456", "EASY","Kangaroo",0,10.5, fixedDate),
-                new HighScoreModel("3", "player1", "123456", "EASY","Kangaroo",0,10.7, fixedDate),
-                new HighScoreModel("4", "player1", "123456", "EASY","Kangaroo",0,11.0, fixedDate),
-                new HighScoreModel("5", "player1", "123456", "EASY","Kangaroo",0,11.2, fixedDate),
-                new HighScoreModel("6", "player1", "123456", "EASY","Kangaroo",0,11.5, fixedDate),
-                new HighScoreModel("7", "player1", "123456", "EASY","Kangaroo",0,11.7, fixedDate),
-                new HighScoreModel("8", "player1", "123456", "EASY","Kangaroo",0,12.0, fixedDate),
-                new HighScoreModel("9", "player1", "123456", "EASY","Kangaroo",0,12.2, fixedDate),
-                new HighScoreModel("10", "player1", "123456", "EASY","Kangaroo",0,12.5, fixedDate)
+                new HighScoreModel("1", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,10.2, fixedDate),
+                new HighScoreModel("2", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,10.5, fixedDate),
+                new HighScoreModel("3", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,10.7, fixedDate),
+                new HighScoreModel("4", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,11.0, fixedDate),
+                new HighScoreModel("5", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,11.2, fixedDate),
+                new HighScoreModel("6", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,11.5, fixedDate),
+                new HighScoreModel("7", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,11.7, fixedDate),
+                new HighScoreModel("8", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,12.0, fixedDate),
+                new HighScoreModel("9", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,12.2, fixedDate),
+                new HighScoreModel("10", "player1", "123456", DifficultyEnum.EASY,"Kangaroo",0,12.5, fixedDate)
         );
 
-        when(highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc("EASY"))
+        when(highScoreRepository.findByDifficultyEnumOrderByWrongAnswerCountAscScoreTimeAsc(DifficultyEnum.EASY))
                 .thenReturn(existingScores);
 
         HighScoreModel newHighScore = new HighScoreModel(
                 null,
                 "player1",
                 "123456",
-                "EASY",
+                DifficultyEnum.EASY,
                 "Kangaroo",
                 0,
                 11.2,
@@ -132,7 +132,7 @@ class HighScoreServiceTest {
                 saved.id() == null &&
                         saved.playerName().equals("player1") &&
                         saved.githubId().equals("123456") &&
-                        saved.difficultyEnum().equals("EASY") &&
+                        saved.difficultyEnum().equals(DifficultyEnum.EASY) &&
                         saved.scoreTime() == 11.2 &&
                         saved.date().equals(fixedDate)
         ));

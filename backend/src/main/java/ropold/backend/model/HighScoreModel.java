@@ -12,7 +12,7 @@ public record HighScoreModel(
         @Size(min = 3, message = "Name must contain at least 3 characters")
         String playerName,
         String githubId,
-        String difficultyEnum,
+        DifficultyEnum difficultyEnum,
         String categoryEnum,
         int wrongAnswerCount,
         double scoreTime,
