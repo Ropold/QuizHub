@@ -240,6 +240,8 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
         return "win-animation win-animation-bad";
     };
 
+    const currentQuestion = currentQuestions[currentQuestionIndex];
+
     return (
         <>
             <div className="space-between">
@@ -253,6 +255,17 @@ export default function Play(props: Readonly<ListOfAllQuestionsProps>) {
                     <p>Question Index {currentQuestionIndex + 1}/10</p>
                     <p>Mistakes {wrongAnswerCount}/10</p>
                     {/*<p>⏱️ Time: {time.toFixed(1)} sec</p>*/}
+                    <div>
+                        <img
+                            src={
+                                currentQuestion.imageUrl
+                                    ? currentQuestion.imageUrl
+                                    : categoryEnumImages[currentQuestion.categoryEnum]
+                            }
+                            alt="Question visual"
+                            className="play-question-image"
+                        />
+                    </div>
                 </div>
             }
 
