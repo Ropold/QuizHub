@@ -27,22 +27,25 @@ export default function MyQuestions(props: Readonly<MyQuestionsProps>) {
     const [imageDeleted, setImageDeleted] = useState(false);
 
 
-    function handleEditToggle (questionId: string) {
+    function handleEditToggle(questionId: string) {
         const questionToEdit = props.allQuestions.find((q) => q.id === questionId);
         if (questionToEdit) {
             setEditData(questionToEdit);
             props.setIsEditing(true);
 
-            // Hier nehmen wir einfach an, dass immer ein Bild vorhanden ist, wenn imageUrl gesetzt ist
-            fetch(questionToEdit.imageUrl)
-                .then((response) => response.blob())
-                .then((blob) => {
-                    const file = new File([blob], "current-image.jpg", { type: blob.type });
-                    setImage(file);
-                })
-                .catch((error) => console.error("Error loading current image:", error));
+            // Nur versuchen, das Bild zu laden, wenn eine URL vorhanden ist
+            if (questionToEdit.imageUrl) {
+                fetch(questionToEdit.imageUrl)
+                    .then((response) => response.blob())
+                    .then((blob) => {
+                        const file = new File([blob], "current-image.jpg", { type: blob.type });
+                        setImage(file);
+                    })
+                    .catch((error) => console.error("Error loading current image:", error));
+            }
         }
     }
+
 
     function handleToggleActiveStatus(questionId: string) {
         axios
