@@ -1,4 +1,4 @@
-import {type DifficultyEnum, getDifficultyEnumDisplayName} from "./model/DifficultyEnum.ts";
+import {ALL_DIFFICULTIES, type DifficultyEnum, getDifficultyEnumDisplayName} from "./model/DifficultyEnum.ts";
 import {type CategoryEnum, getCategoryEnumDisplayName} from "./model/CategoryEnum.ts";
 import type {QuestionModel} from "./model/QuestionModel.ts";
 import headerLogo from "../assets/quiz-logo-header.jpg"
@@ -27,15 +27,26 @@ export default function SearchBar(props: Readonly<SearchBarProps>) {
         activeQuestions
     } = props;
 
-    const categoryTypes = Array.from(new Set(activeQuestions.map((question) => question.categoryEnum))).sort();
+    const categoryTypes = Array.from(
+        new Set(
+            activeQuestions
+                .map((question) => question.categoryEnum)
+                .filter((cat) => cat !== "KANGAROO")
+        )
+    ).sort();
 
-    const difficultyTypes = Array.from(new Set(activeQuestions.map((question) => question.difficultyEnum))).sort();
+    const difficultyTypes = Array.from(
+        new Set(activeQuestions.map((q) => q.difficultyEnum))
+    ).sort((a, b) => ALL_DIFFICULTIES.indexOf(a) - ALL_DIFFICULTIES.indexOf(b));
+
 
     const handleReset = () => {
         setSearchQuery("");
         setSelectedDifficultyEnum("");
         setSelectedCategoryEnum("");
     };
+    const isKangarooDifficulty = selectedDifficultyEnum === "KANGAROO";
+
 
     return (
         <div className="search-bar">
@@ -63,6 +74,7 @@ export default function SearchBar(props: Readonly<SearchBarProps>) {
                 <select
                     value={categoryTypes}
                     onChange={(e) => setSelectedCategoryEnum(e.target.value as CategoryEnum | "")}
+                    disabled={isKangarooDifficulty}
                 >
                     <option value="">Filter by Category</option>
                     {categoryTypes.map((type) => (
@@ -74,16 +86,18 @@ export default function SearchBar(props: Readonly<SearchBarProps>) {
             </label>
             <img
                 src={
-                    selectedCategoryEnum
-                        ? categoryEnumImages[selectedCategoryEnum as CategoryEnum]
-                        : headerLogo
+                    (isKangarooDifficulty
+                        ? categoryEnumImages["KANGAROO"]
+                        : selectedCategoryEnum
+                            ? categoryEnumImages[selectedCategoryEnum as CategoryEnum]
+                            : headerLogo)
                 }
                 alt={selectedCategoryEnum || "logo quiz hub"}
                 className="quiz-image-searchbar"
             />
             <button
                 onClick={handleReset}
-                className={`${searchQuery || selectedCategoryEnum ? "button-group-button" : "button-grey"}`}
+                className={`${searchQuery || selectedDifficultyEnum || selectedCategoryEnum ? "button-group-button" : "button-grey"}`}
             >
                 Reset Filters
             </button>
