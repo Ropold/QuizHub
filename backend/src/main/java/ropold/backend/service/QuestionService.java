@@ -113,4 +113,23 @@ public class QuestionService {
         );
         return questionRepository.save(updatedQuestionModel);
     }
+
+    public List<QuestionModel> addQuestions(List<QuestionModel> questions) {
+        List<QuestionModel> questionsWithIds = questions.stream()
+                .map(q -> new QuestionModel(
+                        idService.generateRandomId(),
+                        q.title(),
+                        q.difficultyEnum(),
+                        q.categoryEnum(),
+                        q.questionText(),
+                        q.options(),
+                        q.answerExplanation(),
+                        q.isActive(),
+                        q.githubId(),
+                        q.imageUrl()
+                ))
+                .toList();
+
+        return questionRepository.saveAll(questionsWithIds);
+    }
 }

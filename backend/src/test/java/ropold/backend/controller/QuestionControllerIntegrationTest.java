@@ -426,4 +426,105 @@ class QuestionControllerIntegrationTest {
         Assertions.assertEquals("https://example.com/image.jpg", updated.imageUrl());
     }
 
+    @Test
+    void postBatchNoLogin_shouldReturnCreatedQuestions() throws Exception {
+        questionRepository.deleteAll();
+
+        String json = """
+    [
+        {
+            "title": "Frage 1 ohne Login",
+            "difficultyEnum": "EASY",
+            "categoryEnum": "ART",
+            "questionText": "Was ist Kunst?",
+            "options": [
+                {"text": "Malerei", "isCorrect": true},
+                {"text": "Rechnen", "isCorrect": false},
+                {"text": "Sport", "isCorrect": false},
+                {"text": "Musik", "isCorrect": false}
+            ],
+            "answerExplanation": "Kunst umfasst Malerei und andere kreative Ausdrucksformen.",
+            "isActive": true,
+            "githubId": "anonymous"
+        },
+        {
+            "title": "Frage 2 ohne Login",
+            "difficultyEnum": "MEDIUM",
+            "categoryEnum": "GEOGRAPHY",
+            "questionText": "Was ist die Hauptstadt von Deutschland?",
+            "options": [
+                {"text": "Berlin", "isCorrect": true},
+                {"text": "München", "isCorrect": false},
+                {"text": "Hamburg", "isCorrect": false},
+                {"text": "Köln", "isCorrect": false}
+            ],
+            "answerExplanation": "Berlin ist die Hauptstadt von Deutschland.",
+            "isActive": true,
+            "githubId": "anonymous"
+        }
+    ]
+    """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/quiz-hub/batch-no-login")
+                        .contentType("application/json")
+                        .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].title").value("Frage 1 ohne Login"))
+                .andExpect(jsonPath("$[0].difficultyEnum").value("EASY"))
+                .andExpect(jsonPath("$[0].categoryEnum").value("ART"))
+                .andExpect(jsonPath("$[0].githubId").value("anonymous"))
+                .andExpect(jsonPath("$[1].title").value("Frage 2 ohne Login"))
+                .andExpect(jsonPath("$[1].difficultyEnum").value("MEDIUM"))
+                .andExpect(jsonPath("$[1].categoryEnum").value("GEOGRAPHY"))
+                .andExpect(jsonPath("$[1].githubId").value("anonymous"));
+
+        List<QuestionModel> savedQuestions = questionRepository.findAll();
+        Assertions.assertEquals(2, savedQuestions.size());
+
+        QuestionModel first = savedQuestions.get(0);
+        org.assertj.core.api.Assertions.assertThat(first)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "imageUrl")
+                .isEqualTo(new QuestionModel(
+                        null,
+                        "Frage 1 ohne Login",
+                        DifficultyEnum.EASY,
+                        CategoryEnum.ART,
+                        "Was ist Kunst?",
+                        List.of(
+                                new AnswerOption("Malerei", true),
+                                new AnswerOption("Rechnen", false),
+                                new AnswerOption("Sport", false),
+                                new AnswerOption("Musik", false)
+                        ),
+                        "Kunst umfasst Malerei und andere kreative Ausdrucksformen.",
+                        true,
+                        "anonymous",
+                        null
+                ));
+
+        QuestionModel second = savedQuestions.get(1);
+        org.assertj.core.api.Assertions.assertThat(second)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "imageUrl")
+                .isEqualTo(new QuestionModel(
+                        null,
+                        "Frage 2 ohne Login",
+                        DifficultyEnum.MEDIUM,
+                        CategoryEnum.GEOGRAPHY,
+                        "Was ist die Hauptstadt von Deutschland?",
+                        List.of(
+                                new AnswerOption("Berlin", true),
+                                new AnswerOption("München", false),
+                                new AnswerOption("Hamburg", false),
+                                new AnswerOption("Köln", false)
+                        ),
+                        "Berlin ist die Hauptstadt von Deutschland.",
+                        true,
+                        "anonymous",
+                        null
+                ));
+    }
+
 }

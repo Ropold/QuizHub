@@ -2,6 +2,7 @@ package ropold.backend.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import ropold.backend.model.AnswerOption;
 import ropold.backend.model.CategoryEnum;
 import ropold.backend.model.DifficultyEnum;
@@ -235,5 +236,64 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findById("1");
         verify(questionRepository, times(1)).save(updatedQuestionModel);
     }
+
+    @Test
+    void testAddQuestions() {
+        QuestionModel input1 = new QuestionModel(
+                null,
+                "Title 1",
+                DifficultyEnum.EASY,
+                CategoryEnum.ART,
+                "Question text 1",
+                List.of(
+                        new AnswerOption("A1", true),
+                        new AnswerOption("A2", false),
+                        new AnswerOption("A3", false),
+                        new AnswerOption("A4", false)
+                ),
+                "Explanation 1",
+                true,
+                "user1",
+                "http://image1.jpg"
+        );
+
+        QuestionModel input2 = new QuestionModel(
+                null,
+                "Title 2",
+                DifficultyEnum.HARD,
+                CategoryEnum.ART,
+                "Question text 2",
+                List.of(
+                        new AnswerOption("B1", false),
+                        new AnswerOption("B2", true),
+                        new AnswerOption("B3", false),
+                        new AnswerOption("B4", false)
+                ),
+                "Explanation 2",
+                true,
+                "user2",
+                "http://image2.jpg"
+        );
+
+        List<QuestionModel> inputQuestions = List.of(input1, input2);
+
+        when(idService.generateRandomId()).thenReturn("id1", "id2");
+        when(questionRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ArgumentCaptor<List<QuestionModel>> captor = ArgumentCaptor.forClass(List.class);
+
+        List<QuestionModel> result = questionService.addQuestions(inputQuestions);
+
+        verify(idService, times(2)).generateRandomId();
+        verify(questionRepository).saveAll(captor.capture());
+
+        List<QuestionModel> savedQuestions = captor.getValue();
+
+        assertEquals(2, savedQuestions.size());
+        assertEquals("id1", savedQuestions.get(0).id());
+        assertEquals("id2", savedQuestions.get(1).id());
+        assertEquals(savedQuestions, result);
+    }
+
 
 }

@@ -104,6 +104,28 @@ public class QuestionController {
         );
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/batch-no-login")
+    public List<QuestionModel> addQuestionsWithNoLogin(
+            @RequestBody List<QuestionModelDto> questionModelDtos) {
+
+        return questionService.addQuestions(
+                questionModelDtos.stream()
+                        .map(questionModelDto -> new QuestionModel(
+                                null,
+                                questionModelDto.title(),
+                                questionModelDto.difficultyEnum(),
+                                questionModelDto.categoryEnum(),
+                                questionModelDto.questionText(),
+                                questionModelDto.options(),
+                                questionModelDto.answerExplanation(),
+                                questionModelDto.isActive(),
+                                questionModelDto.githubId(),
+                                null
+                        )).toList()
+        );
+    }
+
 
     @PutMapping("/{id}")
     public QuestionModel updateQuestion(
