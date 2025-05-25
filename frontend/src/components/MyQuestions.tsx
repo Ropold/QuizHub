@@ -1,5 +1,5 @@
 import type {QuestionModel} from "./model/QuestionModel.ts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import QuestionCard from "./QuestionCard.tsx";
 import {ALL_DIFFICULTIES, type DifficultyEnum, getDifficultyEnumDisplayName} from "./model/DifficultyEnum.ts";
@@ -19,6 +19,7 @@ type MyQuestionsProps = {
 }
 
 export default function MyQuestions(props: Readonly<MyQuestionsProps>) {
+    const [userQuestions, setUserQuestions] = useState<QuestionModel[]>([]);
     const [editData, setEditData] = useState<QuestionModel | null>(null);
     const [image, setImage] = useState<File | null>(null);
     const [questionToDelete, setQuestionToDelete] =  useState<string | null>(null);
@@ -26,6 +27,9 @@ export default function MyQuestions(props: Readonly<MyQuestionsProps>) {
     const [imageChanged, setImageChanged] = useState(false);
     const [imageDeleted, setImageDeleted] = useState(false);
 
+    useEffect(() => {
+        setUserQuestions(props.allQuestions.filter(question => question.githubId === props.user));
+    }, [props.allQuestions, props.user]);
 
     function handleEditToggle(questionId: string) {
         const questionToEdit = props.allQuestions.find((q) => q.id === questionId);
@@ -221,7 +225,7 @@ export default function MyQuestions(props: Readonly<MyQuestionsProps>) {
                                         type="text"
                                         className="add-input-small"
                                         placeholder={`Option ${index + 1}`}
-                                        value={editData?.options[index]?.text || ""}
+                                        value={editData?.options[index]?.text ?? ""}
                                         onChange={(e) => {
                                             if (!editData) return;
                                             const updated = [...editData.options];
@@ -302,8 +306,8 @@ export default function MyQuestions(props: Readonly<MyQuestionsProps>) {
                 </div>
             ) : (
                 <div className="question-card-container">
-                    {props.allQuestions.length > 0 ? (
-                        props.allQuestions.map((q) => (
+                    {userQuestions.length > 0 ? (
+                        userQuestions.map((q) => (
                             <div key={q.id}>
                                 <QuestionCard
                                     question={q}
