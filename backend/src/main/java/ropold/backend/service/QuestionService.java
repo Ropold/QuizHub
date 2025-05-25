@@ -95,7 +95,7 @@ public class QuestionService {
                 .toList();
     }
 
-    public QuestionModel toggleAnimalActive(String id) {
+    public QuestionModel toggleQuestionActive(String id) {
         QuestionModel questionModel = questionRepository.findById(id)
                 .orElseThrow(() -> new QuestionNotFoundException("No Question found with id: " + id));
 
