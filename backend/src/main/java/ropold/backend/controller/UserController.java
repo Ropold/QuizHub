@@ -68,7 +68,7 @@ public class UserController {
         if (!questionModel.githubId().equals(authenticatedUserId)) {
             throw new AccessDeniedException("You do not have permission to toggle this animal.");
         }
-        return questionService.toggleAnimalActive(id);
+        return questionService.toggleQuestionActive(id);
 
     }
 

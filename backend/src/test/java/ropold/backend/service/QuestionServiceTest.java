@@ -229,7 +229,7 @@ class QuestionServiceTest {
         when(questionRepository.findById("1")).thenReturn(Optional.of(questionModel));
         when(questionRepository.save(any(QuestionModel.class))).thenReturn(updatedQuestionModel);
 
-        QuestionModel expected = questionService.toggleAnimalActive("1");
+        QuestionModel expected = questionService.toggleQuestionActive("1");
 
         //then
         assertEquals(updatedQuestionModel, expected);

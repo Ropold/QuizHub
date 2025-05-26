@@ -72,7 +72,7 @@ export default function SearchBar(props: Readonly<SearchBarProps>) {
             </label>
             <label>
                 <select
-                    value={categoryTypes}
+                    value={selectedCategoryEnum}
                     onChange={(e) => setSelectedCategoryEnum(e.target.value as CategoryEnum | "")}
                     disabled={isKangarooDifficulty}
                 >
