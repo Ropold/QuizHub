@@ -46,7 +46,7 @@
     margin-bottom: 1rem;
     word-wrap: break-word; /* Bricht lange Wörter */
     white-space: normal;    /* Erlaubt Umbrüche */
-    max-width: 90%;         /* Optional: begrenzt Breite für bessere Lesbarkeit */
+    max-width: 70%;         /* Optional: begrenzt Breite für bessere Lesbarkeit */
     margin-left: auto;
     margin-right: auto;
 }
