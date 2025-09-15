@@ -40,7 +40,7 @@ export default function Profile(props: Readonly<ProfileProps>) {
             </div>
 
             {/* Anzeige je nach aktivem Tab */}
-            <div>
+            <div>:
                 {activeTab === "profile" && (
                     <>
                         <h2>GitHub Profile</h2>
